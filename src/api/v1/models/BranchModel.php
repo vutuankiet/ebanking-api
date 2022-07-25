@@ -73,6 +73,25 @@ class BranchModel extends DB
         }
     }
 
+    public function Update($id, $name, $location)
+    {
+        try {
+            $checkExit = $this->getBranchById($id);
+            if ($checkExit !== null) {
+                $checkName = $name === "" ? "name_branch" : "'$name'";
+                $checkLocation = $location === "" ? "location_branch" : "'$location'";
+                $sql = "UPDATE branch SET name_branch = $checkName, location_branch = $checkLocation WHERE id_branch = $id;";
+                return $this->executeUpdateAndInsert($sql);
+            } else {
+                $this->jsonResponse(true, "Branch not found by id : $id", "Failed!");
+                die();
+            }
+        } catch (Exception $ex) {
+            $this->trigger_response($ex);
+            die();
+        }
+    }
+
     public function Remove($id)
     {
         try {

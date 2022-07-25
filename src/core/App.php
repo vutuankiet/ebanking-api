@@ -58,6 +58,19 @@ class App
     function PutProcess($arr): void
     {
 
+        $body = json_decode(file_get_contents("php://input"));
+        $this->setController($arr);
+        $this->params = $arr ? array_values($arr) : [];
+//        update branch
+        if (!count($this->params) <= 0) {
+            if (isset($body->name_branch) || isset($body->location_branch)) {
+                $name = $body->name_branch ?? "";
+                $location = $body->location_branch ?? "";
+                call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
+            }
+        } else {
+            echo json_encode(array("query_err" => true, "err_detail" => "No id in url!", "Id not found!"));
+        }
 
     }
 

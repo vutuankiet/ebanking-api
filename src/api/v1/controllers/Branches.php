@@ -51,6 +51,24 @@ class Branches extends Controller
         }
     }
 
+    public function UpdateById($branch)
+    {
+        if (is_array($branch) && count($branch) > 0) {
+            $this->connectModel("BranchModel");
+            $name = $branch["name"] ?? "";
+            $location = $branch["location"] ?? "";
+            $id = $branch["id"] ?? "";
+            $result = $this->model_->Update($id, $name, $location);
+            if ($result) {
+                $this->jsonResponse(false, "", "Success!");
+            }else{
+                $this->jsonResponse(true,"Something wrong in server!","Failed!");
+            }
+        } else {
+            $this->jsonResponse(true, "No data found ! request body must has format {name_branch:'',location_branch:''}", "Failed!");
+        }
+    }
+
     public function AddBranch($branch)
     {
         $isValid = true;
