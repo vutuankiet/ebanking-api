@@ -1,7 +1,9 @@
 <?php
+$config = parse_ini_file('Config.init');
+
 $app_path = "./src/core/App.php";
-$base_controller = "./src/api/v1/controllers/Controller.php";
-$base_model = "./src/api/v1/models/DB.php";
+$base_controller = "./src/api/" . $config["version"] . "/controllers/Controller.php";
+$base_model = "./src/api/" . $config["version"] . "/models/DB.php";
 // Process URL from browser
 require_once "./src/core/App.php";
 

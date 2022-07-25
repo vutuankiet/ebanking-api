@@ -10,17 +10,17 @@ class Branches extends Controller
             //        get all branch function
             $branches = $model->getAllBranch();
             if ($branches !== null) {
-                echo json_encode($branches);
+                $this->jsonResponse(false, "", $branches);
             } else {
-                echo json_encode([]);
+                $this->jsonResponse(true, "no branch in server!", []);
             }
         } else {
 //            get by id
             $branches = $model->getBranchById($id);
             if ($branches !== null) {
-                echo json_encode($branches);
+                $this->jsonResponse(false, "", $branches);
             } else {
-                echo json_encode([]);
+                $this->jsonResponse(true, "Not Found!", []);
             }
         }
     }
@@ -36,20 +36,46 @@ class Branches extends Controller
         }
     }
 
-    function AddBranch($branch)
+    public function RemoveById($id): void
     {
+        if ($id === "") {
+            echo json_encode(array("query_err" => true, "err_detail" => "Id incorrect!", "results" => []));
+            die();
+        }
+        $this->connectModel("BranchModel");
+        $result = $this->model_->Remove($id);
+        if ($result) {
+            $this->jsonResponse(false, "", "Success!");
+        } else {
+            $this->jsonResponse(true, "Something wrong in server!", "Failed!");
+        }
+    }
+
+    public function AddBranch($branch)
+    {
+        $isValid = true;
         if (count($branch) <= 0) {
+            $isValid = false;
             echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {name:'',location:''}", "result" => "Failed!"));
         }
+        if (trim($branch["name"]) === "" || trim($branch["location"]) == "") {
+            $isValid = false;
+            if (trim($branch["name"]) === "") {
+                echo json_encode(array("query_err" => true, "err_detail" => "No branch name found in body data!", "result" => "Failed!"));
+            } else {
+                echo json_encode(array("query_err" => true, "err_detail" => "No branch location found in body data!", "result" => "Failed!"));
+            }
+        }
+        if ($isValid) {
+            $model = $this->model("BranchModel");
 
-        $model = $this->model("BranchModel");
+            $result = $model->Add($branch["location"], $branch["name"]);
 
-        $result = $model->Add($branch["location"], $branch["name"]);
-
-        if ($result) {
-            echo json_encode(array("query_err" => false, "err_detail" => false, "result" => "Success!"));
-        } else {
-            echo json_encode(array("query_err" => true, "err_detail" => "some err when add document in server!", "result" => "failed!"));
+            if ($result) {
+                echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "Success!"));
+            } else {
+                echo json_encode(array("query_err" => true, "err_detail" => "some err when add document in server!", "result" => "failed!"));
+            }
         }
     }
 }

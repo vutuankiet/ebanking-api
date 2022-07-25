@@ -5,11 +5,11 @@ class App
 {
 
     protected $controller = "Home";
-    protected $action = "Index";
-    protected $params = [];
-    protected $api_uri = "api";
-    protected $api_version = "v1";
-    protected $api_method = "GET";
+    protected string $action = "Index";
+    protected array $params = [];
+    protected string $api_uri = "api";
+    protected string $api_version = "v1";
+    protected string $api_method = "GET";
 
     function __construct()
     {
@@ -18,7 +18,7 @@ class App
         $arr = $this->UrlProcess();
         switch ($this->api_method) {
             case "GET":
-                $this->GetProccess($arr);
+                $this->GetProcess($arr);
                 break;
             case "POST":
                 $this->PostProcess($arr);
@@ -34,39 +34,59 @@ class App
         }
     }
 
-    function PostProcess($arr)
+    function PostProcess($arr): void
     {
         $this->setController($arr);
         $body = json_decode(file_get_contents("php://input"));
-        if (isset($body->name_branch) && isset($body->location_brach)) {
+
+//        branch
+
+        if (isset($body->name_branch) && isset($body->location_branch)) {
 //            create branch
-            call_user_func_array([$this->controller, "AddBranch"], ["location" => $body->location_brach, "name" => $body->name_branch]);
+            call_user_func_array([$this->controller, "AddBranch"], [["location" => $body->location_branch, "name" => $body->name_branch]]);
         } else if (isset($body->location)) {
             // get by location
             call_user_func_array([$this->controller, "GetBranchByLocation"], [$body->location]);
+        } else {
+            echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "not found!"));
         }
+//        others
+
+
     }
 
-    function PutProcess($arr)
+    function PutProcess($arr): void
     {
 
+
     }
 
-    function DeletedProcess($arr)
+    function DeletedProcess($arr): void
     {
-
+        $this->setController($arr);
+        $this->params = $arr ? array_values($arr) : [];
+        call_user_func_array([$this->controller, "RemoveById"], $this->params);
     }
 
-    function setController($arr)
+//    function unset_arr($arr): void
+//    {
+//        unset($arr[0]);
+//        unset($arr[1]);
+//        unset($arr[2]);
+//    }
+
+    function setController(&$arr): void
     {
         if (isset($arr[0])) {
+            $config = parse_ini_file("./src/Config.init");
+            $this->api_version = $config["version"];
             if ($arr[0] == $this->api_uri && $arr[1] == $this->api_version) {
                 // Controller
                 if (file_exists("./src/$this->api_uri/$this->api_version/controllers/" . ucfirst($arr[2]) . ".php")) {
                     $this->controller = ucfirst($arr[2]);
                     unset($arr[2]);
-                    unset($arr[0]);
                     unset($arr[1]);
+                    unset($arr[0]);
                 }
             }
         }
@@ -105,6 +125,8 @@ class App
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
                 $this->api_method = 'GET';
+//                api/v1/branches
+//                ['api','v1','branches']
                 return explode("/", filter_var(trim($_GET["url"], "/")));
                 break;
             case 'PUT':
@@ -117,13 +139,12 @@ class App
                 break;
             case 'DELETE';
                 $this->api_method = 'DELETE';
-                $data = [];
+                return explode("/", filter_var(trim($_GET["url"], "/")));
                 break;
             default:
                 break;
         }
     }
-
 }
 
 ?>

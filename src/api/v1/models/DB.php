@@ -25,7 +25,18 @@ class DB
         mysqli_close($this->con);
     }
 
-    public function executeSelect($sql)
+    public function jsonResponse($query_err, $err_detail, $result): void
+    {
+        echo json_encode(array("query_err" => $query_err, "err_detail" => $err_detail, "result" => $result));
+    }
+
+    public function trigger_response(Exception $ex): void
+    {
+        $this->jsonResponse(true, $ex->getMessage(), "Failed!");
+    }
+
+    public
+    function executeSelect($sql)
     {
         try {
             if ($this->con) {
@@ -46,7 +57,8 @@ class DB
 
     }
 
-    public function executeUpdateAndInsert($sql)
+    public
+    function executeUpdateAndInsert($sql)
     {
         try {
             if ($this->con) {
