@@ -126,13 +126,10 @@ class CustomerModel extends DB
                 $checkIdBranch = $id_branch === "" ? "id_branch" : "'$id_branch'";
                 $oldPhone = $this->getPhoneByCustomerId($id);
                 if ($oldPhone != -1) {
-
-                    if ($this->updatePhone($oldPhone, $checkPhone)) {
-                        $sql = "UPDATE customer SET name = $checkName, citizen_identity_card = $checkCitizenIdentityCard, phone = $checkPhone, mail = $checkMail, address = $checkAddress, age = $checkAge, money = $checkMoney, id_card = $checkIdCard, id_branch = $checkIdBranch WHERE id_person = $id;";
-                        return $this->executeUpdateAndInsert($sql);
-                    }
+                    $this->updatePhone($oldPhone, $checkPhone);
                 }
-                $this->jsonResponse(true, "Something err when update phone!", "Failed!");
+                $sql = "UPDATE customer SET name = $checkName, citizen_identity_card = $checkCitizenIdentityCard, phone = $checkPhone, mail = $checkMail, address = $checkAddress, age = $checkAge, money = $checkMoney, id_card = $checkIdCard, id_branch = $checkIdBranch WHERE id_person = $id;";
+                return $this->executeUpdateAndInsert($sql);
                 die();
             } else {
                 $this->jsonResponse(true, "Customer not found by id : $id", "Failed!");
