@@ -38,40 +38,87 @@ class App
     {
         $this->setController($arr);
         $body = json_decode(file_get_contents("php://input"));
-
 //        branch
-
         if (isset($body->name_branch) && isset($body->location_branch)) {
+            if (get_class($this->controller) === "Branches") {
+                $location = $body->location_branch ?? "";
+                $name = $body->name_branch ?? "";
+                call_user_func_array([$this->controller, "AddBranch"], [["location" => $location, "name" => $name]]);
+            }
 //            create branch
-            call_user_func_array([$this->controller, "AddBranch"], [["location" => $body->location_branch, "name" => $body->name_branch]]);
         } else if (isset($body->location)) {
-            // get by location
-            call_user_func_array([$this->controller, "GetBranchByLocation"], [$body->location]);
+            if (get_class($this->controller) === "Branches") {
+                call_user_func_array([$this->controller, "GetBranchByLocation"], [$body->location]);
+            }
+        } else if (isset($body->name) && isset($body->citizen_identity_card) && isset($body->phone) && isset($body->mail) && isset($body->address) && isset($body->age) && isset($body->money) && isset($body->id_card) && isset($body->id_branch) && isset($body->password)) {
+//            create customer
+            if (get_class($this->controller) === "Customers") {
+                if (isset($arr[3]) && $arr[3] === "signup") {
+                    call_user_func_array([$this->controller, "AddCustomer"], [["id_branch" => $body->id_branch, "name" => $body->name, "citizen_identity_card" => $body->citizen_identity_card, "password" => $body->password, "phone" => $body->phone, "mail" => $body->mail, "address" => $body->address, "age" => $body->age, "money" => $body->money, "id_card" => $body->id_card]]);
+                }
+            }
+        } else if (isset($body->id_branch)) {
+            // get by branch
+            if (get_class($this->controller) === "Branches") {
+                if (!isset($arr[3])) {
+                    call_user_func_array([$this->controller, "GetCustomerByBranch"], [$body->id_branch]);
+                }
+            }
+        } else if (isset($body->phone) && isset($body->password)) {
+            if (get_class($this->controller) === "Customers") {
+                $phone = $body->phone ?? "";
+                $password = $body->password ?? "";
+                if (isset($arr[3]) && $arr[3] == "signin") {
+                    call_user_func_array([$this->controller, "SignIn"], [["phone" => $phone, "password" => $password]]);
+                }
+            }
+            //      sign in
         } else {
             echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "not found!"));
+            die();
         }
-//        others
-
-
     }
 
     function PutProcess($arr): void
     {
-
         $body = json_decode(file_get_contents("php://input"));
         $this->setController($arr);
         $this->params = $arr ? array_values($arr) : [];
 //        update branch
+
         if (!count($this->params) <= 0) {
             if (isset($body->name_branch) || isset($body->location_branch)) {
-                $name = $body->name_branch ?? "";
-                $location = $body->location_branch ?? "";
-                call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
+                if (get_class($this->controller) === "Branches") {
+                    $name = $body->name_branch ?? "";
+                    $location = $body->location_branch ?? "";
+                    call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
+                }
+            } else if (isset($body->oldPassword) && isset($body->newPassword)) {
+                if (get_class($this->controller) === "Customers") {
+                    $newPass = $body->newPassword ?? "";
+                    $oldPass = $body->oldPassword ?? "";
+                    call_user_func_array([$this->controller, "changePassword"], [$oldPass, $newPass, $this->params[0]]);
+                }
+            } else if (isset($body->name) || isset($body->citizen_identity_card) || isset($body->phone) || isset($body->mail) || isset($body->address) || isset($body->age) || isset($body->money) || isset($body->id_card) || isset($body->id_branch)) {
+                if (get_class($this->controller) === "Customers") {
+                    $name = $body->name ?? "";
+                    $id_branch = $body->id_branch ?? "";
+                    $citizen_identity_card = $body->citizen_identity_card ?? "";
+                    $phone = $body->phone ?? "";
+                    $mail = $body->mail ?? "";
+                    $address = $body->address ?? "";
+                    $age = $body->age ?? "";
+                    $money = $body->money ?? "";
+                    $id_card = $body->id_card ?? "";
+                    call_user_func_array([$this->controller, "UpdateById"], [array("mail" => $mail, "address" => $address, "name" => $name, "id_branch" => $id_branch, "citizen_identity_card" => $citizen_identity_card, "age" => $age, "phone" => $phone, "money" => $money, "id_card" => $id_card, "id" => $this->params[0])]);
+                }
+            } else {
+                echo json_encode(array("query_err" => true, "err_detail" => "Not found!", "result" => "Failed!"));
             }
         } else {
-            echo json_encode(array("query_err" => true, "err_detail" => "No id in url!", "Id not found!"));
+            echo json_encode(array("query_err" => true, "err_detail" => "No data in body!", "Id not found!"));
+            die();
         }
-
     }
 
     function DeletedProcess($arr): void
@@ -80,13 +127,6 @@ class App
         $this->params = $arr ? array_values($arr) : [];
         call_user_func_array([$this->controller, "RemoveById"], $this->params);
     }
-
-//    function unset_arr($arr): void
-//    {
-//        unset($arr[0]);
-//        unset($arr[1]);
-//        unset($arr[2]);
-//    }
 
     function setController(&$arr): void
     {

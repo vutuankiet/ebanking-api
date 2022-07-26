@@ -23,6 +23,7 @@ class Branches extends Controller
                 $this->jsonResponse(true, "Not Found!", []);
             }
         }
+        die();
     }
 
     public function GetBranchByLocation($location)
@@ -31,16 +32,18 @@ class Branches extends Controller
         $result = $model->getBranchByLocation($location);
         if ($result !== null) {
             echo json_encode(array("location" => $location, "query_err" => "false", "err_detail" => "", "results" => $result));
+
         } else {
             echo json_encode(array("location" => $location, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No location found by keyword!"));
         }
+        die();
+
     }
 
     public function RemoveById($id): void
     {
         if ($id === "") {
             echo json_encode(array("query_err" => true, "err_detail" => "Id incorrect!", "results" => []));
-            die();
         }
         $this->connectModel("BranchModel");
         $result = $this->model_->Remove($id);
@@ -49,6 +52,7 @@ class Branches extends Controller
         } else {
             $this->jsonResponse(true, "Something wrong in server!", "Failed!");
         }
+        die();
     }
 
     public function UpdateById($branch)
@@ -61,12 +65,13 @@ class Branches extends Controller
             $result = $this->model_->Update($id, $name, $location);
             if ($result) {
                 $this->jsonResponse(false, "", "Success!");
-            }else{
-                $this->jsonResponse(true,"Something wrong in server!","Failed!");
+            } else {
+                $this->jsonResponse(true, "Something wrong in server!", "Failed!");
             }
         } else {
             $this->jsonResponse(true, "No data found ! request body must has format {name_branch:'',location_branch:''}", "Failed!");
         }
+        die();
     }
 
     public function AddBranch($branch)
@@ -76,7 +81,7 @@ class Branches extends Controller
             $isValid = false;
             echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {name:'',location:''}", "result" => "Failed!"));
         }
-        if (trim($branch["name"]) === "" || trim($branch["location"]) == "") {
+        if (trim($branch["name"]) === "" || trim($branch["location"]) === "") {
             $isValid = false;
             if (trim($branch["name"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No branch name found in body data!", "result" => "Failed!"));
@@ -95,5 +100,6 @@ class Branches extends Controller
                 echo json_encode(array("query_err" => true, "err_detail" => "some err when add document in server!", "result" => "failed!"));
             }
         }
+        die();
     }
 }

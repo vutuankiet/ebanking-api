@@ -45,7 +45,6 @@ class DB
                 while ($row = $result->fetch_assoc()) {
                     $data [] = $row;
                 }
-
                 return $data;
             } else {
                 trigger_error("No DB connected!");

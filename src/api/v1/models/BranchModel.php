@@ -64,14 +64,6 @@ class BranchModel extends DB
         }
     }
 
-    public function HasExitToRemove($id)
-    {
-        try {
-
-        } catch (SQLiteException $ex) {
-
-        }
-    }
 
     public function Update($id, $name, $location)
     {
@@ -95,8 +87,12 @@ class BranchModel extends DB
     public function Remove($id)
     {
         try {
-            $sql = "UPDATE branch SET state = 0 WHERE id_branch = $id;";
-            return $this->executeUpdateAndInsert($sql);
+            if ($this->getBranchById($id) !== null) {
+                $sql = "UPDATE branch SET state = 0 WHERE id_branch = $id;";
+                return $this->executeUpdateAndInsert($sql);
+            }
+            $this->jsonResponse(true, "No branch found by id : $id", "Failed!");
+            die();
         } catch (Exception $ex) {
             $this->trigger_response($ex);
             die();
