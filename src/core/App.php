@@ -73,6 +73,21 @@ class App
                 }
             }
             //      sign in
+        }else if (isset($body->id_customer) && isset($body->money) && isset($body->period) && isset($body->interest_rate) && isset($body->status) && isset($body->description)) {
+            if (get_class($this->controller) === "Passbooks") {
+                $id_customer = $body->id_customer ?? "";
+                $money = $body->money ?? "";
+                $period = $body->period ?? "";
+                $interest_rate = $body->interest_rate ?? "";
+                $status = $body->status ?? "";
+                $description = $body->description ?? "";
+                call_user_func_array([$this->controller, "AddPassbook"], [["id_customer" => $id_customer, "money" => $money, "period" => $period, "interest_rate" => $interest_rate, "status" => $status, "description" => $description]]);
+            }
+    //            create passbook
+        } else if (isset($body->id_customer)) {
+            if (get_class($this->controller) === "Passbooks") {
+                call_user_func_array([$this->controller, "GetPassbookByCustomer"], [$body->id_customer]);
+            }
         } else {
             echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "not found!"));
             die();
@@ -92,6 +107,16 @@ class App
                     $name = $body->name_branch ?? "";
                     $location = $body->location_branch ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
+                }
+            } else if (isset($body->id_customer) || isset($body->money) || isset($body->period) || isset($body->interest_rate) || isset($body->status) || isset($body->description)) {
+                if (get_class($this->controller) === "Passbooks") {
+                    $id_customer = $body->id_customer ?? "";
+                    $money = $body->money ?? "";
+                    $period = $body->period ?? "";
+                    $interest_rate = $body->interest_rate ?? "";
+                    $status = $body->status ?? "";
+                    $description = $body->description ?? "";
+                    call_user_func_array([$this->controller, "UpdateById"], [array("id_customer" => $id_customer, "money" => $money, "period" => $period, "interest_rate" => $interest_rate, "status" => $status, "description" => $description, "id_passbook" => $this->params[0])]);
                 }
             } else if (isset($body->oldPassword) && isset($body->newPassword)) {
                 if (get_class($this->controller) === "Customers") {
