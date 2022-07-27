@@ -1,0 +1,460 @@
+{
+	"info": {
+		"_postman_id": "33e6b57e-542d-4c09-85b4-43cbe9613541",
+		"name": "e-banking collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get all branch",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get branch by id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get all customers",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get customer by id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get customer by branch id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get all card",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get card by id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get card by customer",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get all passbook",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/passbooks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"passbooks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get passbook by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/passbooks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"passbooks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get passbook by customer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/passbooks/GetPassbookByCustomer/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"passbooks",
+						"GetPassbookByCustomer",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add branch",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name_branch\":\"branch 1\",\r\n    \"location_branch\":\"branch location1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/ebanking-api/api/v1/branches/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"branches",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update branch",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name_branch\":\"Q99\"\r\n\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/ebanking-api/api/v1/branches/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"branches",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete branch",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/ebanking-api/api/v1/branches/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"branches",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\":\"01721313163\",\r\n    \"name\":\"Nguyen Van A\",\r\n    \"age\":19,\r\n    \"mail\":\"dan1gkhanh.dev10@gmail.com\",\r\n    \"address\":\"HCM\",\r\n    \"id_branch\":1,\r\n    \"money\":20000,\r\n    \"id_card\":\"\",\r\n    \"citizen_identity_card\":\"031202407979\",\r\n    \"password\":\"somepass\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/ebanking-api/api/v1/customers/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"customers",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update customer // truyen filed nao up date filed do",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\":\"01721313163\",\r\n    \"name\":\"Nguyen Van A\",\r\n    \"age\":19,\r\n    \"mail\":\"dan1gkhanh.dev10@gmail.com\",\r\n    \"address\":\"HCM\",\r\n    \"id_branch\":1,\r\n    \"money\":20000,\r\n    \"id_card\":\"\",\r\n    \"citizen_identity_card\":\"031202407979\",\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/ebanking-api/api/v1/customers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"customers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remove customer",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/customers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"customers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add card",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"pin\":\"123347\",\r\n    \"status\":\"Dang hoat dong\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/cards",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"cards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update cards",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"pin\":\"123349\",\r\n    \"status\":\"Dang hoat dong\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/cards/xNN3a2DCdt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"cards",
+						"xNN3a2DCdt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remove card",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/cards/xNN3a2DCdt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"cards",
+						"xNN3a2DCdt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add passbook",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_customer\": 1,\r\n    \"money\": 1,\r\n    \"period\": 6,\r\n    \"interest_rate\": 1,\r\n    \"status\":\"Chưa được rút\",\r\n    \"description\":\"Sổ tiết kiệm có kỳ hạn 6 tháng\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/passbooks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"passbooks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update passbook",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_customer\": 1,\r\n    \"money\": 1,\r\n    \"period\": 6,\r\n    \"interest_rate\": 1,\r\n    \"status\": \"Chưa được rút\",\r\n    \"description\": \"Sổ tiết kiệm có kỳ hạn 6 tháng\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/passbooks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"passbooks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remove passbook",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/ebanking-api/api/v1/passbooks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"ebanking-api",
+						"api",
+						"v1",
+						"passbooks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
