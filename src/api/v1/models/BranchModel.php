@@ -39,6 +39,7 @@ class BranchModel extends DB
             $sql = "SELECT * FROM branch WHERE name_branch = '$name' AND location_branch ='$location';";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
+
                 return true;
             }
             return false;
@@ -52,9 +53,19 @@ class BranchModel extends DB
     public function Add($location, $name): bool
     {
         try {
+
             if (!$this->CheckBranchHasExit($name, $location)) {
                 $sql = "INSERT INTO branch(name_branch,location_branch) VALUE('$name','$location');";
                 return $this->executeUpdateAndInsert($sql);
+            } else {
+
+                $sql = "SELECT * FROM branch WHERE name_branch = '$name' AND location_branch = '$location' AND state = 0";
+                $result = $this->executeSelect($sql);
+                if (is_array($result) && count($result) > 0) {
+                    $id = $result[0]["id_branch"];
+                    $sql_update = "UPDATE branch SET state = 1 WHERE id_branch = $id";
+                    return $this->executeUpdateAndInsert($sql_update);
+                }
             }
             echo json_encode(array("query_err" => true, "err_detail" => "Branch name and location has exit!", "result" => []));
             die();

@@ -114,9 +114,11 @@ class App
         $this->params = $arr ? array_values($arr) : [];
 //        update branch
         if (!count($this->params) <= 0) {
+
             if (isset($body->name_branch) || isset($body->location_branch)) {
 
                 if (get_class($this->controller) === "Branches") {
+
                     $name = $body->name_branch ?? "";
                     $location = $body->location_branch ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
