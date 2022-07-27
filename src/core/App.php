@@ -39,42 +39,51 @@ class App
         $this->setController($arr);
         $body = json_decode(file_get_contents("php://input"));
 //        branch
-        if (isset($body->name_branch) && isset($body->location_branch)) {
-            if (get_class($this->controller) === "Branches") {
+        if (get_class($this->controller) === "Branches") {
+            if (isset($body->name_branch) && isset($body->location_branch)) {
                 $location = $body->location_branch ?? "";
                 $name = $body->name_branch ?? "";
                 call_user_func_array([$this->controller, "AddBranch"], [["location" => $location, "name" => $name]]);
-            }
 //            create branch
-        } else if (isset($body->location)) {
-            if (get_class($this->controller) === "Branches") {
+            } else if (isset($body->location)) {
                 call_user_func_array([$this->controller, "GetBranchByLocation"], [$body->location]);
-            }
-        } else if (isset($body->name) && isset($body->citizen_identity_card) && isset($body->phone) && isset($body->mail) && isset($body->address) && isset($body->age) && isset($body->money) && (isset($body->id_card)) && isset($body->id_branch) && isset($body->password)) {
-//            create customer
-            if (get_class($this->controller) === "Customers") {
-                if (isset($arr[3]) && $arr[3] === "signup") {
-                    call_user_func_array([$this->controller, "AddCustomer"], [["id_branch" => $body->id_branch, "name" => $body->name, "citizen_identity_card" => $body->citizen_identity_card, "password" => $body->password, "phone" => $body->phone, "mail" => $body->mail, "address" => $body->address, "age" => $body->age, "money" => $body->money, "id_card" => $body->id_card]]);
-                }
-            }
-        } else if (isset($body->id_branch)) {
-            // get by branch
-            if (get_class($this->controller) === "Branches") {
+            } else if (isset($body->id_branch)) {
+                // get by branch
                 if (!isset($arr[3])) {
                     call_user_func_array([$this->controller, "GetCustomerByBranch"], [$body->id_branch]);
                 }
             }
-        } else if (isset($body->phone) && isset($body->password)) {
-            if (get_class($this->controller) === "Customers") {
+        } else if (get_class($this->controller) === "Customers") {
+
+            if (isset($body->name) && isset($body->citizen_identity_card) && isset($body->phone) &&
+                isset($body->mail) && isset($body->address) && isset($body->age) && isset($body->money) &&
+                (isset($body->id_card)) && isset($body->id_branch) && isset($body->password)) {
+
+                //create
+                if (isset($arr[3]) && $arr[3] === "signup") {
+                    call_user_func_array([$this->controller, "AddCustomer"], [["id_branch" => $body->id_branch, "name" => $body->name, "citizen_identity_card" => $body->citizen_identity_card, "password" => $body->password, "phone" => $body->phone, "mail" => $body->mail, "address" => $body->address, "age" => $body->age, "money" => $body->money, "id_card" => $body->id_card]]);
+                }
+
+            } else if (isset($body->phone) && isset($body->password)) {
+                // login
                 $phone = $body->phone ?? "";
                 $password = $body->password ?? "";
                 if (isset($arr[3]) && $arr[3] == "signin") {
                     call_user_func_array([$this->controller, "SignIn"], [["phone" => $phone, "password" => $password]]);
                 }
+            } else if (isset($body->phone)) {
+                //check phone
+                call_user_func_array([$this->controller, "CheckPhone"], [["phone" => $body->phone]]);
+            } else if (isset($body->mail)) {
+                // check mail
+                call_user_func_array([$this->controller, "CheckMail"], [["mail" => $body->mail]]);
+            } else if (isset($body->citizen_identity_card)) {
+                //check card
+                call_user_func_array([$this->controller, "CheckCitizenCard"], [["]card" => $body->citizen_identity_card]]);
             }
-            //      sign in
-        } else if (isset($body->id_customer) && isset($body->money) && isset($body->period) && isset($body->interest_rate) && isset($body->status) && isset($body->description)) {
-            if (get_class($this->controller) === "Passbooks") {
+
+        } else if (get_class($this->controller) === "Passbooks") {
+            if (isset($body->id_customer) && isset($body->money) && isset($body->period) && isset($body->interest_rate) && isset($body->status) && isset($body->description)) {
                 $id_customer = $body->id_customer ?? "";
                 $money = $body->money ?? "";
                 $period = $body->period ?? "";
@@ -82,25 +91,19 @@ class App
                 $status = $body->status ?? "";
                 $description = $body->description ?? "";
                 call_user_func_array([$this->controller, "AddPassbook"], [["id_customer" => $id_customer, "money" => $money, "period" => $period, "interest_rate" => $interest_rate, "status" => $status, "description" => $description]]);
-            }
-            //            create passbook
-        } else if (isset($body->id_customer)) {
-            if (get_class($this->controller) === "Passbooks") {
+                //            create passbook
+            } else if (isset($body->id_customer)) {
                 call_user_func_array([$this->controller, "GetPassbookByCustomer"], [$body->id_customer]);
-            } else if (isset($body->pin)) {
-
             }
-        } else if (isset($body->pin) && isset($body->status)) {
-            if (get_class($this->controller) === "Cards") {
+        } else if (get_class($this->controller) === "Cards") {
+            if (isset($body->pin) && isset($body->status) && isset($body->id_customer)) {
                 $pin = $body->pin ?? "";
                 $status = $body->status ?? "";
-                call_user_func_array([$this->controller, "AddCard"], [["pin" => $pin, "status" => $status]]);
+                $id_customer = $body->id_customer ?? "";
+                call_user_func_array([$this->controller, "AddCard"], [["is_customer" => $id_customer, "pin" => $pin, "status" => $status]]);
+            } else if (isset($body->pin)) {
+                call_user_func_array([$this->controller, "GetCardByCustomer"], [$body->id_customer]);
             }
-            //            create card
-//        } else if (isset($body->pin)) {
-//            if (get_class($this->controller) === "Cards") {
-//                call_user_func_array([$this->controller, "GetCardByCustomer"], [$body->id_customer]);
-//            }
         } else {
             echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "not found!"));
             die();
@@ -114,24 +117,21 @@ class App
         $this->params = $arr ? array_values($arr) : [];
 //        update branch
         if (!count($this->params) <= 0) {
-
-            if (isset($body->name_branch) || isset($body->location_branch)) {
-
-                if (get_class($this->controller) === "Branches") {
-
+            if (get_class($this->controller) === "Branches") {
+                if (isset($body->name_branch) || isset($body->location_branch)) {
                     $name = $body->name_branch ?? "";
                     $location = $body->location_branch ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
                 }
-            } if (isset($body->pin) || isset($body->status)) {
-                if (get_class($this->controller) === "Cards") {
+            } else if (get_class($this->controller) === "Cards") {
+                if (isset($body->pin) || isset($body->status)) {
                     $pin = $body->pin ?? "";
                     $status = $body->status ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("pin" => $pin, "status" => $status, "id_card" => $this->params[0])]);
                 }
-            } if (isset($body->id_customer) || isset($body->money) || isset($body->period) || isset($body->interest_rate) || isset($body->status) || isset($body->description)) {
-                if (get_class($this->controller) === "Passbooks") {
+            } else if (get_class($this->controller) === "Passbooks") {
 
+                if (isset($body->id_customer) || isset($body->money) || isset($body->period) || isset($body->interest_rate) || isset($body->status) || isset($body->description)) {
                     $id_customer = $body->id_customer ?? "";
                     $money = $body->money ?? "";
                     $period = $body->period ?? "";
@@ -140,15 +140,13 @@ class App
                     $description = $body->description ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("id_customer" => $id_customer, "money" => $money, "period" => $period, "interest_rate" => $interest_rate, "status" => $status, "description" => $description, "id_passbook" => $this->params[0])]);
                 }
-            } else if (isset($body->oldPassword) && isset($body->newPassword)) {
-                if (get_class($this->controller) === "Customers") {
+            } else if (get_class($this->controller) === "Customers") {
+                if (isset($body->oldPassword) && isset($body->newPassword)) {
 
                     $newPass = $body->newPassword ?? "";
                     $oldPass = $body->oldPassword ?? "";
                     call_user_func_array([$this->controller, "changePassword"], [$oldPass, $newPass, $this->params[0]]);
-                }
-            } else if (isset($body->name) || isset($body->citizen_identity_card) || isset($body->phone) || isset($body->mail) || isset($body->address) || isset($body->age) || isset($body->money) || isset($body->id_card) || isset($body->id_branch)) {
-                if (get_class($this->controller) === "Customers") {
+                } else if (isset($body->name) || isset($body->citizen_identity_card) || isset($body->phone) || isset($body->mail) || isset($body->address) || isset($body->age) || isset($body->money) || isset($body->id_card) || isset($body->id_branch)) {
 
                     $name = $body->name ?? "";
                     $id_branch = $body->id_branch ?? "";

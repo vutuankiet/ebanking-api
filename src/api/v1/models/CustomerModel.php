@@ -167,6 +167,30 @@ class CustomerModel extends DB
         }
     }
 
+    public function checkMailHasExit($mail)
+    {
+        try {
+            $sql = "SELECT * FROM customer WHERE  mail = '$mail';";
+            $result = $this->executeSelect($sql);
+            return (is_array($result) && count($result) > 0);
+        } catch (Exception $ex) {
+            $this->trigger_response($ex);
+            die();
+        }
+    }
+
+    public function checkCitizenCardHasExit($citizen_identity_card)
+    {
+        try {
+            $sql = "SELECT * FROM customer WHERE  citizen_identity_card = '$citizen_identity_card';";
+            $result = $this->executeSelect($sql);
+            return (is_array($result) && count($result) > 0);
+        } catch (Exception $ex) {
+            $this->trigger_response($ex);
+            die();
+        }
+    }
+
     public function SignUp($phone, $password)
     {
         try {

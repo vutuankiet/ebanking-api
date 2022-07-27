@@ -2,6 +2,57 @@
 
 class Customers extends Controller
 {
+    public function CheckPhone($customer)
+    {
+        $phone = $customer["phone"] ?? "";
+        if (trim($phone) === "") {
+            $this->jsonResponse(true, "Phone has null!", "Failed!");
+            die();
+        } else {
+            $this->connectModel("CustomerModel");
+            $result = $this->model_->checkPhoneHasExit($phone);
+            if ($result) {
+                $this->jsonResponse(false, "", "Phone Has Exit!");
+                die();
+            }
+            $this->jsonRespose(false, "", "Phone Doesn't exit!");
+        }
+    }
+
+    public function CheckMail($customer)
+    {
+        $mail = $customer["mail"] ?? "";
+        if (trim($mail) === "") {
+            $this->jsonResponse(true, "Mail has null!", "Failed!");
+            die();
+        } else {
+            $this->connectModel("CustomerModel");
+            $result = $this->model_->checkMailHasExit($mail);
+            if ($result) {
+                $this->jsonResponse(false, "", "Mail Has Exit!");
+                die();
+            }
+            $this->jsonRespose(false, "", "Mail Doesn't exit!");
+        }
+    }
+
+    public function checkCitizenCard($customer)
+    {
+        $citizen_identity_card = $customer["mail"] ?? "";
+        if (trim($citizen_identity_card) === "") {
+            $this->jsonResponse(true, "Citizen_identity_card has null!", "Failed!");
+            die();
+        } else {
+            $this->connectModel("CustomerModel");
+            $result = $this->model_->checkCitizenCardHasExit($citizen_identity_card);
+            if ($result) {
+                $this->jsonResponse(false, "", "Citizen_identity_card Has Exit!");
+                die();
+            }
+            $this->jsonRespose(false, "", "Citizen_identity_card Doesn't exit!");
+        }
+    }
+
     public function Index($id = null)
     {
         $model = $this->model("CustomerModel");

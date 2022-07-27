@@ -62,7 +62,7 @@ class CardModel extends DB
         }
     }
 
-    public function Add($pin_code, $status): bool
+    public function Add($pin_code, $status, $id_customer)
     {
         try {
             $length = 10;
@@ -76,7 +76,13 @@ class CardModel extends DB
             $status = "Chưa kích hoạt";
             if (!$this->CheckPinHasExit($pin_code)) {
                 $sql = "INSERT INTO card(id_card,pin,status,state) VALUE('$id','$pin_code','$status',1)";
-                return $this->executeUpdateAndInsert($sql);
+                $result = $this->executeUpdateAndInsert($sql);
+                if ($result) {
+                    // update customer
+                    $sql_update = "UPDATE customer SET id_card = '$id' WHERE id_person=$id_customer";
+                    $result_ = $this->executeUpdateAndInsert($sql_update);
+                    return array("id" => $id, "result" => $result_);
+                }
             }
             echo json_encode(array("query_err" => true, "err_detail" => "Card pin has exit!", "result" => []));
             die();
@@ -94,12 +100,8 @@ class CardModel extends DB
             if ($checkExit !== null) {
                 $checkPin = $pin_code === "" ? "pin" : "'$pin_code'";
                 $checkStatus = $status === "" ? "status" : "'$status'";
-                if (!$this->CheckPinHasExit($pin_code)) {
-                    $sql = "UPDATE card SET pin = $checkPin, status = $checkStatus WHERE id_card = '$id'";
-                    return $this->executeUpdateAndInsert($sql);
-                }
-                echo json_encode(array("query_err" => true, "err_detail" => "Card pin has exit!", "result" => []));
-                die();
+                $sql = "UPDATE card SET pin = $checkPin, status = $checkStatus WHERE id_card = '$id'";
+                return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Card not found by id : '$id'", "Failed!");
                 die();

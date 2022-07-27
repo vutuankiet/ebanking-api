@@ -85,7 +85,8 @@ class Cards extends Controller
             $isValid = false;
             if (trim($card["pin"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No card pin found in body data!", "result" => "Failed!"));
-            }if (trim($card["status"]) === "") {
+            }
+            if (trim($card["status"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No card status found in body data!", "result" => "Failed!"));
             } else {
                 echo json_encode(array("query_err" => true, "err_detail" => "No card found in body data!", "result" => "Failed!"));
@@ -94,10 +95,10 @@ class Cards extends Controller
         if ($isValid) {
             $model = $this->model("CardModel");
 
-            $result = $model->Add($card["pin"], $card["status"]);
+            $result = $model->Add($card["pin"], $card["status"], $card["id_customer"]);
 
-            if ($result) {
-                echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "Success!"));
+            if ($result["result"]) {
+                echo json_encode(array("query_err" => false, "err_detail" => "", "result" => ["success" => true, "id" => $result["id"]]));
             } else {
                 echo json_encode(array("query_err" => true, "err_detail" => "some err when add document in server!", "result" => "failed!"));
             }
