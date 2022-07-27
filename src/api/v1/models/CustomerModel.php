@@ -79,7 +79,7 @@ class CustomerModel extends DB
             if (!$this->CheckCustomerHasExit($citizen_identity_card, $phone, $mail)) {
                 $rs = $this->SignUp($phone, $password);
                 if ($rs) {
-                    $sql = "INSERT INTO customer(name, citizen_identity_card, phone, mail, address, age, money, id_card, id_branch) VALUE('$name','$citizen_identity_card','$phone','$mail','$address','$age','$money','$id_card','$id_branch');";
+                    $sql = "INSERT INTO customer(name, citizen_identity_card, phone, mail, address, age, money, id_branch) VALUE('$name','$citizen_identity_card','$phone','$mail','$address',$age,$money,$id_branch);";
                     $result = $this->executeUpdateAndInsert($sql);
                     if ($result) {
                         $sql_select = "SELECT id_person FROM customer WHERE phone = '$phone';";

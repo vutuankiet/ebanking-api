@@ -138,7 +138,7 @@ class Customers extends Controller
             $isValid = false;
             echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {name:'',mail:'',phone:''}", "result" => "Failed!"));
         }
-        if (trim($customer["name"]) === "" || trim($customer["mail"]) === "" || trim($customer["password"]) === "" || trim($customer["citizen_identity_card"]) === "" || trim($customer["phone"]) === "" || trim($customer["address"]) === "" || trim($customer["age"]) === "" || trim($customer["money"]) === "" || trim($customer["id_card"]) === "" || trim($customer["id_branch"]) === "") {
+        if (trim($customer["name"]) === "" || trim($customer["mail"]) === "" || trim($customer["password"]) === "" || trim($customer["citizen_identity_card"]) === "" || trim($customer["phone"]) === "" || trim($customer["address"]) === "" || trim($customer["age"]) === "" || trim($customer["money"]) === "" || trim($customer["id_branch"]) === "") {
             $isValid = false;
             if (trim($customer["name"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No customer name found in body data!", "result" => "Failed!"));
@@ -168,10 +168,6 @@ class Customers extends Controller
                 echo json_encode(array("query_err" => true, "err_detail" => "No customer money found in body data!", "result" => "Failed!"));
                 die();
             }
-            if (trim($customer["id_card"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No customer id_card found in body data!", "result" => "Failed!"));
-                die();
-            }
             if (trim($customer["password"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No customer password found in body data!", "result" => "Failed!"));
                 die();
@@ -191,6 +187,11 @@ class Customers extends Controller
                 echo json_encode(array("query_err" => true, "err_detail" => "some err when add document in server!", "result" => "failed!"));
             }
         }
+    }
+
+    public function Phone($phone)
+    {
+
     }
 
     public function changePassword($oldPassword, $newPassword, $id)

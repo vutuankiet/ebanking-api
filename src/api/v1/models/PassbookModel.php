@@ -66,17 +66,13 @@ class PassbookModel extends DB
     public function Add($id_customer, $money, $period, $interest_rate, $status, $description): bool
     {
         try {
-            if (!$this->CheckPassbookHasExit($id_customer)) {
-                if ($this->CheckCustomerIDHasExit($id_customer)) {
-                    $withdrawaled_time = date('Y-m-d H:i:s', strtotime("now +$period months"));
-                    $desc = "Sổ tiết kiệm có kỳ hạn $period tháng!";
-                    $sql = "INSERT INTO passbook(id_customer, money, period, interest_rate, status, description,withdrawaled_at) VALUE($id_customer, $money, $period, $interest_rate, '$status', '$desc','$withdrawaled_time');";
-                    return $this->executeUpdateAndInsert($sql);
-                }
-                echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit!", "result" => []));
-                die();
+            if ($this->CheckCustomerIDHasExit($id_customer)) {
+                $withdrawaled_time = date('Y-m-d H:i:s', strtotime("now +$period months"));
+                $desc = "Sổ tiết kiệm có kỳ hạn $period tháng!";
+                $sql = "INSERT INTO passbook(id_customer, money, period, interest_rate, status, description,withdrawaled_at) VALUE($id_customer, $money, $period, $interest_rate, '$status', '$desc','$withdrawaled_time');";
+                return $this->executeUpdateAndInsert($sql);
             }
-            echo json_encode(array("query_err" => true, "err_detail" => "Customer has exit!", "result" => []));
+            echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit!", "result" => []));
             die();
         } catch (SQLiteException $ex) {
             $this->trigger_response($ex);
