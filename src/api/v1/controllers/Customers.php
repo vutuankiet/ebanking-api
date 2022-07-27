@@ -117,7 +117,8 @@ class Customers extends Controller
             $money = $customer["money"] ?? "";
             $id_card = $customer["id_card"] ?? "";
             $id_branch = $customer["id_branch"] ?? "";
-            $id = $customer["id"] ?? "";
+            $id = $customer["id_person"] ?? "";
+
             $result = $this->model_->Update($id, $name, $citizen_identity_card, $phone, $mail, $address, $age, $money, $id_card, $id_branch);
             if ($result) {
                 $this->jsonResponse(false, "", "Success!");

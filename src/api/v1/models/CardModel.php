@@ -128,7 +128,7 @@ class CardModel extends DB
     public function getCardByCustomer($id_customer)
     {
         try {
-            $sql = "SELECT customer.id_card,pin,status from customer JOIN card ON customer.id_card = card.id_card WHERE id_person = $id_customer; ";
+            $sql = "SELECT customer.id_card,pin,status from customer JOIN card ON customer.id_card = card.id_card WHERE id_person = $id_customer;";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 return $result;

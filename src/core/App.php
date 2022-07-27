@@ -113,15 +113,16 @@ class App
         $this->setController($arr);
         $this->params = $arr ? array_values($arr) : [];
 //        update branch
-
         if (!count($this->params) <= 0) {
             if (isset($body->name_branch) || isset($body->location_branch)) {
+
                 if (get_class($this->controller) === "Branches") {
                     $name = $body->name_branch ?? "";
                     $location = $body->location_branch ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
                 }
-            } else if (isset($body->pin) || isset($body->status)) {
+            } else if (isset($body->pin)) {
+
                 if (get_class($this->controller) === "Cards") {
                     $pin = $body->pin ?? "";
                     $status = $body->status ?? "";
@@ -129,6 +130,7 @@ class App
                 }
             } else if (isset($body->id_customer) || isset($body->money) || isset($body->period) || isset($body->interest_rate) || isset($body->status) || isset($body->description)) {
                 if (get_class($this->controller) === "Passbooks") {
+
                     $id_customer = $body->id_customer ?? "";
                     $money = $body->money ?? "";
                     $period = $body->period ?? "";
@@ -139,12 +141,14 @@ class App
                 }
             } else if (isset($body->oldPassword) && isset($body->newPassword)) {
                 if (get_class($this->controller) === "Customers") {
+
                     $newPass = $body->newPassword ?? "";
                     $oldPass = $body->oldPassword ?? "";
                     call_user_func_array([$this->controller, "changePassword"], [$oldPass, $newPass, $this->params[0]]);
                 }
             } else if (isset($body->name) || isset($body->citizen_identity_card) || isset($body->phone) || isset($body->mail) || isset($body->address) || isset($body->age) || isset($body->money) || isset($body->id_card) || isset($body->id_branch)) {
                 if (get_class($this->controller) === "Customers") {
+
                     $name = $body->name ?? "";
                     $id_branch = $body->id_branch ?? "";
                     $citizen_identity_card = $body->citizen_identity_card ?? "";
@@ -154,9 +158,10 @@ class App
                     $age = $body->age ?? "";
                     $money = $body->money ?? "";
                     $id_card = $body->id_card ?? "";
-                    call_user_func_array([$this->controller, "UpdateById"], [array("mail" => $mail, "address" => $address, "name" => $name, "id_branch" => $id_branch, "citizen_identity_card" => $citizen_identity_card, "age" => $age, "phone" => $phone, "money" => $money, "id_card" => $id_card, "id" => $this->params[0])]);
+                    call_user_func_array([$this->controller, "UpdateById"], [array("mail" => $mail, "address" => $address, "name" => $name, "id_branch" => $id_branch, "citizen_identity_card" => $citizen_identity_card, "age" => $age, "phone" => $phone, "money" => $money, "id_card" => $id_card, "id_person" => $this->params[0])]);
                 }
             } else {
+
                 echo json_encode(array("query_err" => true, "err_detail" => "Not found!", "result" => "Failed!"));
             }
         } else {
