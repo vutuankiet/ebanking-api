@@ -123,14 +123,13 @@ class App
                     $location = $body->location_branch ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
                 }
-            } else if (isset($body->pin)) {
-
+            } if (isset($body->pin) || isset($body->status)) {
                 if (get_class($this->controller) === "Cards") {
                     $pin = $body->pin ?? "";
                     $status = $body->status ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("pin" => $pin, "status" => $status, "id_card" => $this->params[0])]);
                 }
-            } else if (isset($body->id_customer) || isset($body->money) || isset($body->period) || isset($body->interest_rate) || isset($body->status) || isset($body->description)) {
+            } if (isset($body->id_customer) || isset($body->money) || isset($body->period) || isset($body->interest_rate) || isset($body->status) || isset($body->description)) {
                 if (get_class($this->controller) === "Passbooks") {
 
                     $id_customer = $body->id_customer ?? "";
