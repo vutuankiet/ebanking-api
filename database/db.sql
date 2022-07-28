@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `branch` (
   PRIMARY KEY (`id_branch`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.branch: ~1 rows (approximately)
+-- Dumping data for table ebanking.branch: ~0 rows (approximately)
 DELETE FROM `branch`;
 /*!40000 ALTER TABLE `branch` DISABLE KEYS */;
 INSERT INTO `branch` (`id_branch`, `name_branch`, `location_branch`, `state`, `created_at`, `updated_at`) VALUES
@@ -65,15 +65,22 @@ CREATE TABLE IF NOT EXISTS `card` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `expired_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `state` int(11) DEFAULT '1',
-  PRIMARY KEY (`id_card`)
+  `id_customer` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_card`),
+  KEY `card` (`id_customer`),
+  CONSTRAINT `card_ibfk_1` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id_person`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table ebanking.card: ~2 rows (approximately)
 DELETE FROM `card`;
 /*!40000 ALTER TABLE `card` DISABLE KEYS */;
-INSERT INTO `card` (`id_card`, `pin`, `status`, `created_at`, `updated_at`, `expired_at`, `state`) VALUES
-	('Ot3eQc5bhW', '123347', 'Chưa kích hoạt', '2022-07-27 18:39:48', '2022-07-27 18:39:48', '2022-07-27 18:39:48', 1),
-	('xNN3a2DCdt', '123349', 'Dang hoat dong', '2022-07-27 18:37:41', '2022-07-27 18:41:49', '2022-07-27 18:37:41', 0);
+INSERT INTO `card` (`id_card`, `pin`, `status`, `created_at`, `updated_at`, `expired_at`, `state`, `id_customer`) VALUES
+	('8J7NZPShn9', '123347', 'dang hoat dong', '2022-07-28 12:22:23', '2022-07-28 12:25:04', '2022-07-28 12:22:23', 1, 2),
+	('Ot3eQc5bhW', '123347', 'Da kích hoạt', '2022-07-27 18:39:48', '2022-07-27 21:54:48', '2022-07-27 18:39:48', 1, NULL),
+	('PQCW1g8bEd', '123219', 'Chưa kích hoạt', '2022-07-28 12:21:04', '2022-07-28 12:21:04', '2022-07-28 12:21:04', 1, 2),
+	('UC9flqt96m', '123213', 'Chưa kích hoạt', '2022-07-28 12:11:00', '2022-07-28 12:11:00', '2022-07-28 12:11:00', 1, 1),
+	('xNN3a2DCdt', '123349', 'Dang hoat dong', '2022-07-27 18:37:41', '2022-07-27 18:41:49', '2022-07-27 18:37:41', 0, NULL),
+	('Y07g5t3GKd', '123219', 'Chưa kích hoạt', '2022-07-28 12:22:13', '2022-07-28 12:22:13', '2022-07-28 12:22:13', 1, 1);
 /*!40000 ALTER TABLE `card` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.category_transaction
@@ -103,7 +110,6 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `money` bigint(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `id_card` varchar(20) DEFAULT '""',
   `id_branch` int(11) NOT NULL,
   `state` int(11) DEFAULT '1',
   PRIMARY KEY (`id_person`),
@@ -111,7 +117,6 @@ CREATE TABLE IF NOT EXISTS `customer` (
   UNIQUE KEY `citizen_identity_card` (`citizen_identity_card`),
   UNIQUE KEY `phone` (`phone`),
   KEY `id_branch` (`id_branch`),
-  KEY `id_card` (`id_card`) USING BTREE,
   KEY `customer` (`phone`) USING BTREE,
   CONSTRAINT `customer_ibfk_4` FOREIGN KEY (`id_branch`) REFERENCES `branch` (`id_branch`),
   CONSTRAINT `customer_ibfk_5` FOREIGN KEY (`phone`) REFERENCES `account` (`phone`)
@@ -120,9 +125,9 @@ CREATE TABLE IF NOT EXISTS `customer` (
 -- Dumping data for table ebanking.customer: ~2 rows (approximately)
 DELETE FROM `customer`;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` (`id_person`, `name`, `citizen_identity_card`, `mail`, `phone`, `address`, `age`, `money`, `created_at`, `updated_at`, `id_card`, `id_branch`, `state`) VALUES
-	(1, 'hello', '031202407979', 'dan1gkhanh.dev10@gmail.com', '01721313163', 'HCM', 19, 20000, '2022-07-27 18:23:21', '2022-07-27 18:23:21', 'Ot3eQc5bhW', 1, 1),
-	(2, 'Nguyen Van B', '031202407779', 'dan1gkhanh1.dev140@gmail.com', '01721313155', 'HCM', 19, 20000, '2022-07-27 18:28:42', '2022-07-27 18:28:42', 'Ot3eQc5bhW', 1, 1);
+INSERT INTO `customer` (`id_person`, `name`, `citizen_identity_card`, `mail`, `phone`, `address`, `age`, `money`, `created_at`, `updated_at`, `id_branch`, `state`) VALUES
+	(1, 'hello', '031202407979', 'dan1gkhanh.dev10@gmail.com', '01721313163', 'HCM', 19, 20000, '2022-07-27 18:23:21', '2022-07-27 18:23:21', 1, 1),
+	(2, 'Nguyen Van B', '031202407779', 'dan1gkhanh1.dev140@gmail.com', '01721313155', 'HCM', 19, 20000, '2022-07-27 18:28:42', '2022-07-27 18:28:42', 1, 0);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.history_transaction
@@ -161,13 +166,14 @@ CREATE TABLE IF NOT EXISTS `passbook` (
   PRIMARY KEY (`id_passbook`),
   KEY `id_customer` (`id_customer`),
   CONSTRAINT `passbook_ibfk_1` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id_person`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.passbook: ~1 rows (approximately)
+-- Dumping data for table ebanking.passbook: ~2 rows (approximately)
 DELETE FROM `passbook`;
 /*!40000 ALTER TABLE `passbook` DISABLE KEYS */;
 INSERT INTO `passbook` (`id_passbook`, `id_customer`, `money`, `created_at`, `period`, `interest_rate`, `status`, `description`, `updated_at`, `withdrawaled_at`, `state`) VALUES
-	(1, 1, 1, '2022-07-27 18:47:50', 6, 1, 'Chưa được rút', 'Sổ tiết kiệm có kỳ hạn 6 tháng', '2022-07-27 18:47:50', '2023-01-27 11:47:50', 0);
+	(1, 1, 3, '2022-07-27 18:47:50', 6, 1, 'Chưa được rút', 'Sổ tiết kiệm có kỳ hạn 6 tháng', '2022-07-27 18:47:50', '2023-01-27 11:47:50', 0),
+	(2, 1, 2, '2022-07-27 22:40:47', 6, 1, 'Chưa được rút', 'Sổ tiết kiệm có kỳ hạn 6 tháng!', '2022-07-27 22:40:47', '2023-01-27 15:40:47', 1);
 /*!40000 ALTER TABLE `passbook` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
