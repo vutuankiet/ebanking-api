@@ -19,6 +19,7 @@ CREATE DATABASE IF NOT EXISTS `ebanking` /*!40100 DEFAULT CHARACTER SET utf8mb4 
 USE `ebanking`;
 
 -- Dumping structure for table ebanking.account
+DROP TABLE IF EXISTS `account`;
 CREATE TABLE IF NOT EXISTS `account` (
   `phone` varchar(20) NOT NULL,
   `password` varchar(50) NOT NULL,
@@ -39,6 +40,7 @@ INSERT INTO `account` (`phone`, `password`, `status`, `state`, `token`, `updated
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.branch
+DROP TABLE IF EXISTS `branch`;
 CREATE TABLE IF NOT EXISTS `branch` (
   `id_branch` int(11) NOT NULL AUTO_INCREMENT,
   `name_branch` varchar(50) NOT NULL,
@@ -49,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `branch` (
   PRIMARY KEY (`id_branch`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.branch: ~1 rows (approximately)
+-- Dumping data for table ebanking.branch: ~0 rows (approximately)
 DELETE FROM `branch`;
 /*!40000 ALTER TABLE `branch` DISABLE KEYS */;
 INSERT INTO `branch` (`id_branch`, `name_branch`, `location_branch`, `state`, `created_at`, `updated_at`) VALUES
@@ -57,6 +59,7 @@ INSERT INTO `branch` (`id_branch`, `name_branch`, `location_branch`, `state`, `c
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.card
+DROP TABLE IF EXISTS `card`;
 CREATE TABLE IF NOT EXISTS `card` (
   `id_card` varchar(20) NOT NULL,
   `pin` varchar(6) NOT NULL,
@@ -74,16 +77,10 @@ CREATE TABLE IF NOT EXISTS `card` (
 -- Dumping data for table ebanking.card: ~6 rows (approximately)
 DELETE FROM `card`;
 /*!40000 ALTER TABLE `card` DISABLE KEYS */;
-INSERT INTO `card` (`id_card`, `pin`, `status`, `created_at`, `updated_at`, `expired_at`, `state`, `id_customer`) VALUES
-	('8J7NZPShn9', '123347', 'dang hoat dong', '2022-07-28 12:22:23', '2022-07-28 12:25:04', '2022-07-28 12:22:23', 1, 2),
-	('Ot3eQc5bhW', '123347', 'Da kích hoạt', '2022-07-27 18:39:48', '2022-07-27 21:54:48', '2022-07-27 18:39:48', 1, NULL),
-	('PQCW1g8bEd', '123219', 'Chưa kích hoạt', '2022-07-28 12:21:04', '2022-07-28 12:21:04', '2022-07-28 12:21:04', 1, 2),
-	('UC9flqt96m', '123213', 'Chưa kích hoạt', '2022-07-28 12:11:00', '2022-07-28 12:11:00', '2022-07-28 12:11:00', 1, 1),
-	('xNN3a2DCdt', '123349', 'Dang hoat dong', '2022-07-27 18:37:41', '2022-07-27 18:41:49', '2022-07-27 18:37:41', 0, NULL),
-	('Y07g5t3GKd', '123219', 'Chưa kích hoạt', '2022-07-28 12:22:13', '2022-07-28 12:22:13', '2022-07-28 12:22:13', 1, 1);
 /*!40000 ALTER TABLE `card` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.category_transaction
+DROP TABLE IF EXISTS `category_transaction`;
 CREATE TABLE IF NOT EXISTS `category_transaction` (
   `id_category_transaction` int(11) NOT NULL AUTO_INCREMENT,
   `name_transaction` varchar(50) NOT NULL,
@@ -99,6 +96,7 @@ DELETE FROM `category_transaction`;
 /*!40000 ALTER TABLE `category_transaction` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.customer
+DROP TABLE IF EXISTS `customer`;
 CREATE TABLE IF NOT EXISTS `customer` (
   `id_person` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -131,6 +129,7 @@ INSERT INTO `customer` (`id_person`, `name`, `citizen_identity_card`, `mail`, `p
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.history_transaction
+DROP TABLE IF EXISTS `history_transaction`;
 CREATE TABLE IF NOT EXISTS `history_transaction` (
   `id_transaction` int(11) NOT NULL AUTO_INCREMENT,
   `id_category_transaction` int(11) NOT NULL,
@@ -151,6 +150,7 @@ DELETE FROM `history_transaction`;
 /*!40000 ALTER TABLE `history_transaction` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.passbook
+DROP TABLE IF EXISTS `passbook`;
 CREATE TABLE IF NOT EXISTS `passbook` (
   `id_passbook` int(11) NOT NULL AUTO_INCREMENT,
   `id_customer` int(11) NOT NULL,
