@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `branch` (
   PRIMARY KEY (`id_branch`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.branch: ~0 rows (approximately)
+-- Dumping data for table ebanking.branch: ~1 rows (approximately)
 DELETE FROM `branch`;
 /*!40000 ALTER TABLE `branch` DISABLE KEYS */;
 INSERT INTO `branch` (`id_branch`, `name_branch`, `location_branch`, `state`, `created_at`, `updated_at`) VALUES
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `card` (
   CONSTRAINT `card_ibfk_1` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id_person`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.card: ~2 rows (approximately)
+-- Dumping data for table ebanking.card: ~6 rows (approximately)
 DELETE FROM `card`;
 /*!40000 ALTER TABLE `card` DISABLE KEYS */;
 INSERT INTO `card` (`id_card`, `pin`, `status`, `created_at`, `updated_at`, `expired_at`, `state`, `id_customer`) VALUES
