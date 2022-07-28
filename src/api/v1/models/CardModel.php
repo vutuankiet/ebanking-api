@@ -60,14 +60,11 @@ class CardModel extends DB
             }
             $id = $randomString;
             $status = "Đã kích hoạt";
-            if ($this->CheckPinHasExit($pin_code)) {
-                $sql = "INSERT INTO card(id_card,pin,status,state,id_customer) VALUE('$id','$pin_code','$status',1,'$id_customer')";
-                $result = $this->executeUpdateAndInsert($sql);
-                if ($result) {
-                    return array("id" => $id, "result" => $result);
-                }
+            $sql = "INSERT INTO card(id_card,pin,status,state,id_customer) VALUE('$id','$pin_code','$status',1,'$id_customer')";
+            $result = $this->executeUpdateAndInsert($sql);
+            if ($result) {
+                return array("id" => $id, "result" => $result);
             }
-            echo json_encode(array("query_err" => true, "err_detail" => "Card pin has exit!", "result" => []));
             die();
         } catch (SQLiteException $ex) {
             $this->trigger_response($ex);
