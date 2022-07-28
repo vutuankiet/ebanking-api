@@ -59,8 +59,8 @@ class CardModel extends DB
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
             }
             $id = $randomString;
-            $status = "Chưa kích hoạt";
-            if (!$this->CheckPinHasExit($pin_code)) {
+            $status = "Đã kích hoạt";
+            if ($this->CheckPinHasExit($pin_code)) {
                 $sql = "INSERT INTO card(id_card,pin,status,state,id_customer) VALUE('$id','$pin_code','$status',1,'$id_customer')";
                 $result = $this->executeUpdateAndInsert($sql);
                 if ($result) {
@@ -113,7 +113,7 @@ class CardModel extends DB
     public function getCardByCustomer($id_customer)
     {
         try {
-            $sql = "SELECT customer.id_card,pin,status,state from card WHERE id_customer = $id_customer;";
+            $sql = "SELECT card.id_card,card.pin,card.status,card.state from card JOIN customer ON card.id_customer = customer.id_person WHERE customer.state = 1 AND card.id_customer = $id_customer;";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 return $result;
