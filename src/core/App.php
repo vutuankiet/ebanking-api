@@ -37,6 +37,7 @@ class App
     function PostProcess($arr): void
     {
         $this->setController($arr);
+
         $body = json_decode(file_get_contents("php://input"));
 //        branch
         if (get_class($this->controller) === "Branches") {
@@ -100,7 +101,7 @@ class App
                 $pin = $body->pin ?? "";
                 $status = $body->status ?? "";
                 $id_customer = $body->id_customer ?? "";
-                call_user_func_array([$this->controller, "AddCard"], [["is_customer" => $id_customer, "pin" => $pin, "status" => $status]]);
+                call_user_func_array([$this->controller, "AddCard"], [["id_customer" => $id_customer, "pin" => $pin, "status" => $status]]);
             } else if (isset($body->pin)) {
                 call_user_func_array([$this->controller, "GetCardByCustomer"], [$body->id_customer]);
             }

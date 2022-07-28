@@ -81,17 +81,20 @@ class Cards extends Controller
             $isValid = false;
             echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {pin:''}", "result" => "Failed!"));
         }
-        if (trim($card["pin"]) === "" || trim($card["status"]) === "") {
+        if (trim($card["pin"]) === "" || trim($card["status"]) === "" || trim($card["id_customer"]) === "") {
             $isValid = false;
+
             if (trim($card["pin"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No card pin found in body data!", "result" => "Failed!"));
             }
+            if (trim($card["id_customer"]) === "") {
+                echo json_encode(array("query_err" => true, "err_detail" => "No customer id found in body data!", "result" => "Failed!"));
+            }
             if (trim($card["status"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No card status found in body data!", "result" => "Failed!"));
-            } else {
-                echo json_encode(array("query_err" => true, "err_detail" => "No card found in body data!", "result" => "Failed!"));
             }
         }
+
         if ($isValid) {
             $model = $this->model("CardModel");
 

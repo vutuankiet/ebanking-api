@@ -32,20 +32,6 @@ class CardModel extends DB
         }
     }
 
-//    public function CheckCustomerIDHasExit($id_customer)
-//    {
-//        try {
-//            $sql = "SELECT * FROM customer WHERE i_Car = '$id_customer';";
-//            $result = $this->executeSelect($sql);
-//            if (is_array($result) && count($result) > 0) {
-//                return true;
-//            }
-//            return false;
-//        } catch (SQLiteException $ex) {
-//            $this->trigger_response($ex);
-//            die();
-//        }
-//    }
 
     public function CheckPinHasExit($pin)
     {
@@ -75,13 +61,10 @@ class CardModel extends DB
             $id = $randomString;
             $status = "Chưa kích hoạt";
             if (!$this->CheckPinHasExit($pin_code)) {
-                $sql = "INSERT INTO card(id_card,pin,status,state) VALUE('$id','$pin_code','$status',1)";
+                $sql = "INSERT INTO card(id_card,pin,status,state,id_customer) VALUE('$id','$pin_code','$status',1,'$id_customer')";
                 $result = $this->executeUpdateAndInsert($sql);
                 if ($result) {
-                    // update customer
-                    $sql_update = "UPDATE customer SET id_card = '$id' WHERE id_person=$id_customer";
-                    $result_ = $this->executeUpdateAndInsert($sql_update);
-                    return array("id" => $id, "result" => $result_);
+                    return array("id" => $id, "result" => $result);
                 }
             }
             echo json_encode(array("query_err" => true, "err_detail" => "Card pin has exit!", "result" => []));
@@ -130,7 +113,7 @@ class CardModel extends DB
     public function getCardByCustomer($id_customer)
     {
         try {
-            $sql = "SELECT customer.id_card,pin,status from customer JOIN card ON customer.id_card = card.id_card WHERE id_person = $id_customer;";
+            $sql = "SELECT customer.id_card,pin,status,state from card WHERE id_customer = $id_customer;";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 return $result;
