@@ -60,7 +60,7 @@ class CardModel extends DB
             }
             $id = $randomString;
             $status = "Đã kích hoạt";
-            $sql = "INSERT INTO card(id_card,pin,status,state,id_customer) VALUE('$id','$pin_code','$status',1,'$id_customer')";
+            $sql = "INSERT INTO card(id_card,pin,status,state,id_customer,updated_at) VALUE('$id','$pin_code','$status',1,'$id_customer',null)";
             $result = $this->executeUpdateAndInsert($sql);
             if ($result) {
                 return array("id" => $id, "result" => $result);

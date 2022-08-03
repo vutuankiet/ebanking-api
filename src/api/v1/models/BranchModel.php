@@ -55,7 +55,7 @@ class BranchModel extends DB
         try {
 
             if (!$this->CheckBranchHasExit($name, $location)) {
-                $sql = "INSERT INTO branch(name_branch,location_branch) VALUE('$name','$location');";
+                $sql = "INSERT INTO branch(name_branch,location_branch,updated_at) VALUE('$name','$location',null);";
                 return $this->executeUpdateAndInsert($sql);
             } else {
 
