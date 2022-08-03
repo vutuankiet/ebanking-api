@@ -80,7 +80,7 @@ class CardModel extends DB
             if ($checkExit !== null) {
                 $checkPin = $pin_code === "" ? "pin" : "'$pin_code'";
                 $checkStatus = $status === "" ? "status" : "'$status'";
-                $sql = "UPDATE card SET pin = $checkPin, status = $checkStatus WHERE id_card = '$id'";
+                $sql = "UPDATE card SET pin = $checkPin, status = $checkStatus, updated_at = CURRENT_TIMESTAMP() WHERE id_card = '$id'";
                 return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Card not found by id : '$id'", "Failed!");

@@ -84,17 +84,23 @@ class App
             }
 
         } else if (get_class($this->controller) === "Passbooks") {
-            if (isset($body->id_customer) && isset($body->money) && isset($body->period) && isset($body->interest_rate) && isset($body->status) && isset($body->description)) {
+            if (isset($body->id_customer) && isset($body->money) && isset($body->id_category_passbook)) {
                 $id_customer = $body->id_customer ?? "";
                 $money = $body->money ?? "";
-                $period = $body->period ?? "";
-                $interest_rate = $body->interest_rate ?? "";
-                $status = $body->status ?? "";
-                $description = $body->description ?? "";
-                call_user_func_array([$this->controller, "AddPassbook"], [["id_customer" => $id_customer, "money" => $money, "period" => $period, "interest_rate" => $interest_rate, "status" => $status, "description" => $description]]);
+                $id_category_passbook = $body->id_category_passbook ?? "";
+                call_user_func_array([$this->controller, "AddPassbook"], [["id_customer" => $id_customer, "money" => $money, "id_category_passbook" => $id_category_passbook]]);
                 //            create passbook
             } else if (isset($body->id_customer)) {
                 call_user_func_array([$this->controller, "GetPassbookByCustomer"], [$body->id_customer]);
+            }
+        } else if (get_class($this->controller) === "CategoryPassbooks") {
+            if (isset($body->name_passbook) && isset($body->period) && isset($body->interest_rate) && isset($body->description)) {
+                $name_passbook = $body->name_passbook ?? "";
+                $period = $body->period ?? "";
+                $interest_rate = $body->interest_rate ?? "";
+                $description = $body->description ?? "";
+                call_user_func_array([$this->controller, "AddCategoryPassbook"], [["name_passbook" => $name_passbook, "period" => $period, "interest_rate" => $interest_rate, "description" => $description]]);
+                //            create Category Passbook
             }
         } else if (get_class($this->controller) === "Cards") {
             if (isset($body->pin) && isset($body->status) && isset($body->id_customer)) {
@@ -132,14 +138,20 @@ class App
                 }
             } else if (get_class($this->controller) === "Passbooks") {
 
-                if (isset($body->id_customer) || isset($body->money) || isset($body->period) || isset($body->interest_rate) || isset($body->status) || isset($body->description)) {
+                if (isset($body->id_customer) || isset($body->money) || isset($body->id_category_passbook)) {
                     $id_customer = $body->id_customer ?? "";
                     $money = $body->money ?? "";
+                    $id_category_passbook = $body->id_category_passbook ?? "";
+                    call_user_func_array([$this->controller, "UpdateById"], [array("id_customer" => $id_customer, "money" => $money, "id_category_passbook" => $id_category_passbook, "id_passbook" => $this->params[0])]);
+                }
+            } else if (get_class($this->controller) === "CategoryPassbooks") {
+
+                if (isset($body->name_passbook) && isset($body->period) && isset($body->interest_rate) && isset($body->description)) {
+                    $name_passbook = $body->name_passbook ?? "";
                     $period = $body->period ?? "";
                     $interest_rate = $body->interest_rate ?? "";
-                    $status = $body->status ?? "";
                     $description = $body->description ?? "";
-                    call_user_func_array([$this->controller, "UpdateById"], [array("id_customer" => $id_customer, "money" => $money, "period" => $period, "interest_rate" => $interest_rate, "status" => $status, "description" => $description, "id_passbook" => $this->params[0])]);
+                    call_user_func_array([$this->controller, "UpdateById"], [array("name_passbook" => $name_passbook, "period" => $period, "interest_rate" => $interest_rate, "description" => $description, "id_category_passbook" => $this->params[0])]);
                 }
             } else if (get_class($this->controller) === "Customers") {
                 if (isset($body->oldPassword) && isset($body->newPassword)) {

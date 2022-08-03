@@ -61,12 +61,9 @@ class Passbooks extends Controller
             $this->connectModel("PassbookModel");
             $id_customer = $passbook["id_customer"] ?? "";
             $money = $passbook["money"] ?? "";
-            $period = $passbook["period"] ?? "";
-            $interest_rate = $passbook["interest_rate"] ?? "";
-            $status = $passbook["status"] ?? "";
-            $description = $passbook["description"] ?? "";
+            $id_category_passbook = $passbook["id_category_passbook"] ?? "";
             $id = $passbook["id_passbook"] ?? "";
-            $result = $this->model_->Update($id, $id_customer, $money, $period, $interest_rate, $status, $description);
+            $result = $this->model_->Update($id, $id_customer, $money, $id_category_passbook);
             if ($result) {
                 $this->jsonResponse(false, "", "Success!");
             } else {
@@ -85,7 +82,7 @@ class Passbooks extends Controller
             $isValid = false;
             echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {id_customer}", "result" => "Failed!"));
         }
-        if (trim($passbook["id_customer"]) === "" || trim($passbook["money"]) === "" || trim($passbook["period"]) === "" || trim($passbook["interest_rate"]) === "" || trim($passbook["status"]) === "" || trim($passbook["description"]) === "") {
+        if (trim($passbook["id_customer"]) === "" || trim($passbook["money"]) === "" || trim($passbook["id_category_passbook"]) === "") {
             $isValid = false;
             if (trim($passbook["id_customer"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No passbook id_customer found in body data!", "result" => "Failed!"));
@@ -93,17 +90,8 @@ class Passbooks extends Controller
             if (trim($passbook["money"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No passbook money found in body data!", "result" => "Failed!"));
             }
-            if (trim($passbook["period"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No passbook period found in body data!", "result" => "Failed!"));
-            }
-            if (trim($passbook["interest_rate"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No passbook interest_rate found in body data!", "result" => "Failed!"));
-            }
-            if (trim($passbook["status"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No passbook status found in body data!", "result" => "Failed!"));
-            }
-            if (trim($passbook["description"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No passbook description found in body data!", "result" => "Failed!"));
+            if (trim($passbook["id_category_passbook"]) === "") {
+                echo json_encode(array("query_err" => true, "err_detail" => "No passbook id_category_passbook found in body data!", "result" => "Failed!"));
             } else {
                 echo json_encode(array("query_err" => true, "err_detail" => "No passbook found in body data!", "result" => "Failed!"));
             }
@@ -111,7 +99,7 @@ class Passbooks extends Controller
         if ($isValid) {
             $model = $this->model("PassbookModel");
 
-            $result = $model->Add($passbook["id_customer"], $passbook["money"], $passbook["period"], $passbook["interest_rate"], $passbook["status"], $passbook["description"]);
+            $result = $model->Add($passbook["id_customer"], $passbook["money"], $passbook["id_category_passbook"]);
 
             if ($result) {
                 echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "Success!"));

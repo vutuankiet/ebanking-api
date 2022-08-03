@@ -48,6 +48,21 @@ class PassbookModel extends DB
         }
     }
 
+    public function CheckCategoryPassbookIDHasExit($id_category_passbook)
+    {
+        try {
+            $sql = "SELECT * FROM category_passbook WHERE id_category_passbook = '$id_category_passbook';";
+            $result = $this->executeSelect($sql);
+            if (is_array($result) && count($result) > 0) {
+                return true;
+            }
+            return false;
+        } catch (SQLiteException $ex) {
+            $this->trigger_response($ex);
+            die();
+        }
+    }
+
     public function CheckPassbookHasExit($id_customer)
     {
         try {
@@ -63,16 +78,14 @@ class PassbookModel extends DB
         }
     }
 
-    public function Add($id_customer, $money, $period, $interest_rate, $status, $description): bool
+    public function Add($id_customer, $money, $id_category_passbook): bool
     {
         try {
-            if ($this->CheckCustomerIDHasExit($id_customer)) {
-                $withdrawaled_time = date('Y-m-d H:i:s', strtotime("now +$period months"));
-                $desc = "Sổ tiết kiệm có kỳ hạn $period tháng!";
-                $sql = "INSERT INTO passbook(id_customer, money, period, interest_rate, status, description,withdrawaled_at,updated_at) VALUE($id_customer, $money, $period, $interest_rate, '$status', '$desc','$withdrawaled_time',null);";
+            if ($this->CheckCustomerIDHasExit($id_customer) && $this->CheckCategoryPassbookIDHasExit($id_category_passbook)) {
+                $sql = "INSERT INTO passbook(id_customer, money, id_category_passbook, updated_at) VALUE($id_customer, $money, $id_category_passbook, null);";
                 return $this->executeUpdateAndInsert($sql);
             }
-            echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit!", "result" => []));
+            echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit or category passbook!", "result" => []));
             die();
         } catch (SQLiteException $ex) {
             $this->trigger_response($ex);
@@ -81,18 +94,15 @@ class PassbookModel extends DB
     }
 
 
-    public function Update($id, $id_customer, $money, $period, $interest_rate, $status, $description)
+    public function Update($id, $id_customer, $money, $id_category_passbook)
     {
         try {
             $checkExit = $this->getPassbookById($id);
             if ($checkExit !== null) {
                 $checkIdCustomer = $id_customer === "" ? "id_customer" : "$id_customer";
                 $checkMoney = $money === "" ? "money" : "$money";
-                $checkPeriod = $period === "" ? "period" : "$period";
-                $checkInterestRate = $interest_rate === "" ? "interest_rate" : "$interest_rate";
-                $checkStatus = $status === "" ? "status" : "'$status'";
-                $checkDescription = $description === "" ? "description" : "'$description'";
-                $sql = "UPDATE passbook SET id_customer = $checkIdCustomer, money = $checkMoney, period = $checkPeriod, interest_rate = $checkInterestRate, status = $checkStatus, description = $checkDescription WHERE id_passbook = $id;";
+                $checkCategoryPassbook = $id_category_passbook === "" ? "id_category_passbook" : "$id_category_passbook";
+                $sql = "UPDATE passbook SET id_customer = $checkIdCustomer, money = $checkMoney, id_category_passbook = $checkCategoryPassbook, updated_at = CURRENT_TIMESTAMP() WHERE id_passbook = $id;";
                 return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Passbook not found by id : $id", "Failed!");

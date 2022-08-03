@@ -128,7 +128,7 @@ class CustomerModel extends DB
                 if ($oldPhone != -1) {
                     $this->updatePhone($oldPhone, $checkPhone);
                 }
-                $sql = "UPDATE customer SET name = $checkName, citizen_identity_card = $checkCitizenIdentityCard, phone = $checkPhone, mail = $checkMail, address = $checkAddress, age = $checkAge, money = $checkMoney, id_card = $checkIdCard, id_branch = $checkIdBranch WHERE id_person = $id;";
+                $sql = "UPDATE customer SET name = $checkName, citizen_identity_card = $checkCitizenIdentityCard, phone = $checkPhone, mail = $checkMail, address = $checkAddress, age = $checkAge, money = $checkMoney, id_card = $checkIdCard, id_branch = $checkIdBranch, updated_at = CURRENT_TIMESTAMP() WHERE id_person = $id;";
                 return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Customer not found by id : $id", "Failed!");
