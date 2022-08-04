@@ -195,7 +195,8 @@ class CustomerModel extends DB
     {
         try {
             if (!$this->checkPhoneHasExit($phone)) {
-                $sql = "INSERT INTO account(phone, password) VALUE('$phone', '$password');";
+                $hashPass = base64_encode($password);
+                $sql = "INSERT INTO account(phone, password) VALUE('$phone', '$hashPass');";
                 return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Phone has exit!", "Failed!");
@@ -209,7 +210,8 @@ class CustomerModel extends DB
     public function SignIn($phone, $password)
     {
         try {
-            $sql = "SELECT * FROM account WHERE phone = '$phone' and password = '$password'";
+            $hashPass = base64_encode($password);
+            $sql = "SELECT * FROM account WHERE phone = '$phone' and password = '$hashPass'";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 $token = base64_encode($phone . $password . date("Y:m:d"));
@@ -230,10 +232,11 @@ class CustomerModel extends DB
 
     public function checkPassword($password, $id)
     {
+        $hashPass = base64_encode($password);
         $customer = $this->getCustomerById($id);
         if ($customer !== null) {
             $phone = $customer[0]["phone"];
-            $sql = "SELECT * FROM account WHERE phone = $phone AND password = $password";
+            $sql = "SELECT * FROM account WHERE phone = $phone AND password = $hashPass";
             $select_result = $this->executeSelect($sql);
             return (is_array($select_result) && count($select_result) > 0);
         }
