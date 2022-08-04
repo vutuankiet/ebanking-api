@@ -102,6 +102,26 @@ class App
                 call_user_func_array([$this->controller, "AddCategoryPassbook"], [["name_passbook" => $name_passbook, "period" => $period, "interest_rate" => $interest_rate, "description" => $description]]);
                 //            create Category Passbook
             }
+        } else if (get_class($this->controller) === "HistoryTransactions") {
+            if (isset($body->id_category_transaction) || isset($body->money) || isset($body->id_customer) || isset($body->part_transaction) || isset($body->status)) {
+                $id_category_transaction = $body->id_category_transaction ?? "";
+                $money = $body->money ?? "";
+                $id_customer = $body->id_customer ?? "";
+                $part_transaction = $body->part_transaction ?? "";
+                $status = $body->status ?? "";
+                call_user_func_array([$this->controller, "AddHistoryTransaction"], [["id_category_transaction" => $id_category_transaction, "money" => $money, "id_customer" => $id_customer, "part_transaction" => $part_transaction, "status" => $status]]);
+                //            create history transactions
+            } else if (isset($body->id_customer)) {
+                call_user_func_array([$this->controller, "GetPassbookByCustomer"], [$body->id_customer]);
+            }
+        } else if (get_class($this->controller) === "CategoryTransactions") {
+            if (isset($body->name_transaction) && isset($body->description) && isset($body->fee_transaction)) {
+                $name_transaction = $body->name_transaction ?? "";
+                $description = $body->description ?? "";
+                $fee_transaction = $body->fee_transaction ?? "";
+                call_user_func_array([$this->controller, "AddCategoryTransaction"], [["name_transaction" => $name_transaction, "description" => $description, "fee_transaction" => $fee_transaction]]);
+                //            create Category Transaction
+            }
         } else if (get_class($this->controller) === "Cards") {
             if (isset($body->pin) && isset($body->status) && isset($body->id_customer)) {
                 $pin = $body->pin ?? "";
@@ -152,6 +172,24 @@ class App
                     $interest_rate = $body->interest_rate ?? "";
                     $description = $body->description ?? "";
                     call_user_func_array([$this->controller, "UpdateById"], [array("name_passbook" => $name_passbook, "period" => $period, "interest_rate" => $interest_rate, "description" => $description, "id_category_passbook" => $this->params[0])]);
+                }
+            } else if (get_class($this->controller) === "HistoryTransactions") {
+
+                if (isset($body->id_category_transaction) || isset($body->money) || isset($body->id_customer) || isset($body->part_transaction) || isset($body->status)) {
+                    $id_category_transaction = $body->id_category_transaction ?? "";
+                    $money = $body->money ?? "";
+                    $id_customer = $body->id_customer ?? "";
+                    $part_transaction = $body->part_transaction ?? "";
+                    $status = $body->status ?? "";
+                    call_user_func_array([$this->controller, "UpdateById"], [array("id_category_transaction" => $id_category_transaction, "money" => $money, "id_customer" => $id_customer, "part_transaction" => $part_transaction, "status" => $status, "id_transaction" => $this->params[0])]);
+                }
+            } else if (get_class($this->controller) === "CategoryTransactions") {
+
+                if (isset($body->name_transaction) && isset($body->description) && isset($body->fee_transaction)) {
+                    $name_transaction = $body->name_transaction ?? "";
+                    $description = $body->description ?? "";
+                    $fee_transaction = $body->fee_transaction ?? "";
+                    call_user_func_array([$this->controller, "UpdateById"], [array("name_transaction" => $name_transaction, "description" => $description, "fee_transaction" => $fee_transaction, "id_category_transaction" => $this->params[0])]);
                 }
             } else if (get_class($this->controller) === "Customers") {
                 if (isset($body->oldPassword) && isset($body->newPassword)) {
