@@ -59,20 +59,18 @@ class HistoryTransactions extends Controller
     {
         if (is_array($transactions) && count($transactions) > 0) {
             $this->connectModel("HistoryTransactionModel");
-            $id_category_transaction = $transactions["id_category_transaction"] ?? "";
             $money = $transactions["money"] ?? "";
-            $id_customer = $transactions["id_customer"] ?? "";
-            $part_transaction = $transactions["part_transaction"] ?? "";
+            $from = $transactions["from"] ?? "";
             $status = $transactions["status"] ?? "";
             $id = $transactions["id_transaction"] ?? "";
-            $result = $this->model_->Update($id, $id_category_transaction, $money, $id_customer, $part_transaction, $status);
+            $result = $this->model_->Update($id, $money, $from, $status);
             if ($result) {
                 $this->jsonResponse(false, "", "Success!");
             } else {
                 $this->jsonResponse(true, "Something wrong in server!", "Failed!");
             }
         } else {
-            $this->jsonResponse(true, "No data found ! request body must has format {id_category_transaction:'',money:'',id_customer:''}", "Failed!");
+            $this->jsonResponse(true, "No data found ! request body must has format {id_category_transaction:'',money:'',from:''}", "Failed!");
         }
         die();
     }
@@ -82,24 +80,18 @@ class HistoryTransactions extends Controller
         $isValid = true;
         if (count($transactions) <= 0) {
             $isValid = false;
-            echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {id_category_transaction:'',money:'',id_customer:''}", "result" => "Failed!"));
+            echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {id_category_transaction:'',money:'',from:''}", "result" => "Failed!"));
         }
-        if (trim($transactions["id_category_transaction"]) === "" || trim($transactions["money"]) === "" || trim($transactions["id_customer"]) === "" || trim($transactions["part_transaction"]) === "" || trim($transactions["status"]) === "") {
+        if (trim($transactions["money"]) === "" || trim($transactions["from"]) === "" || trim($transactions["id_category_transaction"]) === "") {
             $isValid = false;
-            if (trim($transactions["id_category_transaction"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No history transaction id_category_transaction found in body data!", "result" => "Failed!"));
-            }
             if (trim($transactions["money"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No history transaction money found in body data!", "result" => "Failed!"));
             }
-            if (trim($transactions["id_customer"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No history transaction id_customer found in body data!", "result" => "Failed!"));
+            if (trim($transactions["from"]) === "") {
+                echo json_encode(array("query_err" => true, "err_detail" => "No history transaction 'from' found in body data!", "result" => "Failed!"));
             }
-            if (trim($transactions["part_transaction"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No history transaction part_transaction found in body data!", "result" => "Failed!"));
-            }
-            if (trim($transactions["status"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No history transaction status found in body data!", "result" => "Failed!"));
+            if (trim($transactions["id_category_transaction"]) === "") {
+                echo json_encode(array("query_err" => true, "err_detail" => "No history transaction 'id_category_transaction' found in body data!", "result" => "Failed!"));
             } else {
                 echo json_encode(array("query_err" => true, "err_detail" => "No history transaction found in body data!", "result" => "Failed!"));
             }
@@ -107,7 +99,7 @@ class HistoryTransactions extends Controller
         if ($isValid) {
             $model = $this->model("HistoryTransactionModel");
 
-            $result = $model->Add($transactions["id_category_transaction"], $transactions["money"], $transactions["id_customer"], $transactions["part_transaction"], $transactions["status"]);
+            $result = $model->Add($transactions["money"], $transactions["from"], $transactions["id_category_transaction"]);
 
             if ($result) {
                 echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "Success!"));

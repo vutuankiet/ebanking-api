@@ -73,7 +73,7 @@ class CustomerModel extends DB
     }
 
 
-    public function Add($name, $password, $citizen_identity_card, $phone, $mail, $address, $age, $money, $id_card, $id_branch): bool
+    public function Add($name, $password, $citizen_identity_card, $phone, $mail, $address, $age, $money, $id_branch): bool
     {
         try {
             if (!$this->CheckCustomerHasExit($citizen_identity_card, $phone, $mail)) {
@@ -107,10 +107,11 @@ class CustomerModel extends DB
     public function updatePhone($oldPhone, $phone)
     {
         $sql = "UPDATE account SET phone = $phone WHERE phone = '$oldPhone';";
+        print_r($sql);
         return $this->executeUpdateAndInsert($sql);
     }
 
-    public function Update($id, $name, $citizen_identity_card, $phone, $mail, $address, $age, $money, $id_card, $id_branch)
+    public function Update($id, $name, $citizen_identity_card, $phone, $mail, $address, $age, $money, $id_branch)
     {
         try {
             $checkExit = $this->getCustomerById($id);
@@ -122,14 +123,14 @@ class CustomerModel extends DB
                 $checkAddress = $address === "" ? "address" : "'$address'";
                 $checkAge = $age === "" ? "age" : "$age";
                 $checkMoney = $money === "" ? "money" : "$money";
-                $checkIdCard = $id_card === "" ? "id_card" : "'$id_card'";
                 $checkIdBranch = $id_branch === "" ? "id_branch" : "'$id_branch'";
                 $oldPhone = $this->getPhoneByCustomerId($id);
                 if ($oldPhone != -1) {
                     $this->updatePhone($oldPhone, $checkPhone);
                 }
-                $sql = "UPDATE customer SET name = $checkName, citizen_identity_card = $checkCitizenIdentityCard, phone = $checkPhone, mail = $checkMail, address = $checkAddress, age = $checkAge, money = $checkMoney, id_card = $checkIdCard, id_branch = $checkIdBranch, updated_at = CURRENT_TIMESTAMP() WHERE id_person = $id;";
+                $sql = "UPDATE customer SET name = $checkName, citizen_identity_card = $checkCitizenIdentityCard, phone = $checkPhone, mail = $checkMail, address = $checkAddress, age = $checkAge, money = $checkMoney, id_branch = $checkIdBranch, updated_at = CURRENT_TIMESTAMP() WHERE id_person = $id;";
                 return $this->executeUpdateAndInsert($sql);
+
             } else {
                 $this->jsonResponse(true, "Customer not found by id : $id", "Failed!");
                 die();
@@ -195,8 +196,16 @@ class CustomerModel extends DB
     {
         try {
             if (!$this->checkPhoneHasExit($phone)) {
+                $length = 25;
+                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < $length; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+                $token = $randomString;
                 $hashPass = base64_encode($password);
-                $sql = "INSERT INTO account(phone, password) VALUE('$phone', '$hashPass');";
+                $sql = "INSERT INTO account(phone, password, token, updated_at) VALUE('$phone', '$hashPass','$token',null);";
                 return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Phone has exit!", "Failed!");
@@ -214,14 +223,12 @@ class CustomerModel extends DB
             $sql = "SELECT * FROM account WHERE phone = '$phone' and password = '$hashPass'";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
-                $token = base64_encode($phone . $password . date("Y:m:d"));
-                $sql_insert_token = "UPDATE account SET token = '$token' WHERE phone = '$phone';";
-                $res = $this->executeUpdateAndInsert($sql_insert_token);
-                if (!$res) {
-                    $this->jsonResponse(true, "Something err when set token!", "Failed!");
+                $sql_insert_token = "SELECT token FROM account WHERE phone = '$phone';";
+                $result_token = $this->executeSelect($sql_insert_token);
+                if (is_array($result_token) && count($result_token) > 0) {
+                    $this->jsonResponse(false, "", $result_token);
                     die();
                 }
-                $this->jsonResponse(false, "", ["token" => $token]);
                 die();
             };
             return false;

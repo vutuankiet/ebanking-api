@@ -5,7 +5,7 @@ class HistoryTransactionModel extends DB
     public function getAllHistoryTransaction()
     {
         try {
-            $sql = "SELECT * FROM history_transaction WHERE state = 1;";
+            $sql = "SELECT history_transaction.id_transaction,customer.name,customer.phone, history_transaction.money,category_transaction.name_transaction, category_transaction.description, category_transaction.fee_transaction, history_transaction.status, history_transaction.created_at FROM (( history_transaction INNER JOIN customer ON history_transaction.`from`=customer.id_person) INNER JOIN category_transaction ON history_transaction.id_category_transaction=category_transaction.id_category_transaction) WHERE history_transaction.state = 1;";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 return $result;
@@ -77,15 +77,15 @@ class HistoryTransactionModel extends DB
         }
     }
 
-    public function Add($id_category_transaction, $money, $id_customer, $part_transaction, $status): bool
+    public function Add($money, $from, $id_category_transaction): bool
     {
         try {
-            if ($this->CheckCustomerIDHasExit($id_customer) && $this->CheckCategoryTransactionIDHasExit($id_category_transaction)) {
-                $sql = "INSERT INTO history_transaction(id_category_transaction, money, id_customer, part_transaction, status, updated_at) VALUE($id_category_transaction, $money, $id_customer, '$part_transaction', '$status', null);";
-                print_r($sql);
+            if ($this->CheckCustomerIDHasExit($from)) {
+                $status = "Thành Công";
+                $sql = "INSERT INTO history_transaction(`money`, `from`, `id_category_transaction`, `status`, `updated_at`) VALUES($money, $from, $id_category_transaction, '$status', null);";
                 return $this->executeUpdateAndInsert($sql);
             }
-            echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit or category transaction!", "result" => []));
+            echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit!", "result" => []));
             die();
         } catch (SQLiteException $ex) {
             $this->trigger_response($ex);
@@ -94,17 +94,16 @@ class HistoryTransactionModel extends DB
     }
 
 
-    public function Update($id, $id_category_transaction, $money, $id_customer, $part_transaction, $status)
+    public function Update($id, $money, $from, $id_category_transaction, $status)
     {
         try {
             $checkExit = $this->getHistoryTransactionById($id);
             if ($checkExit !== null) {
-                $checkIdCategoryTransaction = $id_category_transaction === "" ? "id_category_transaction" : "$id_category_transaction";
                 $checkMoney = $money === "" ? "money" : "$money";
-                $checkIdCustomer = $id_customer === "" ? "id_customer" : "$id_customer";
-                $checkPartTransaction = $part_transaction === "" ? "part_transaction" : "'$part_transaction'";
+                $checkFrom = $from === "" ? "from" : "$from";
+                $checkIdCategoryTransaction = $id_category_transaction === "" ? "id_category_transaction" : "$id_category_transaction";
                 $checkPartStatus = $status === "" ? "status" : "'$status'";
-                $sql = "UPDATE history_transaction SET id_category_transaction = $checkIdCategoryTransaction, money = $checkMoney, id_customer = $checkIdCustomer, part_transaction = $checkPartTransaction, status = $checkPartStatus , updated_at = CURRENT_TIMESTAMP() WHERE id_transaction = $id;";
+                $sql = "UPDATE history_transaction SET `money` = $checkMoney, `from` = $checkFrom, `id_category_transaction` = $checkIdCategoryTransaction, `status` = $checkPartStatus , `updated_at` = CURRENT_TIMESTAMP() WHERE id_transaction = $id;";
                 return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Transaction not found by id : $id", "Failed!");

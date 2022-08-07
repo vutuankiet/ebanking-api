@@ -166,11 +166,10 @@ class Customers extends Controller
             $address = $customer["address"] ?? "";
             $age = $customer["age"] ?? "";
             $money = $customer["money"] ?? "";
-            $id_card = $customer["id_card"] ?? "";
             $id_branch = $customer["id_branch"] ?? "";
             $id = $customer["id_person"] ?? "";
 
-            $result = $this->model_->Update($id, $name, $citizen_identity_card, $phone, $mail, $address, $age, $money, $id_card, $id_branch);
+            $result = $this->model_->Update($id, $name, $citizen_identity_card, $phone, $mail, $address, $age, $money, $id_branch);
             if ($result) {
                 $this->jsonResponse(false, "", "Success!");
                 die();
@@ -232,7 +231,7 @@ class Customers extends Controller
         }
         if ($isValid) {
             $model = $this->model("CustomerModel");
-            $result = $model->Add($customer["name"], $customer["password"], $customer["citizen_identity_card"], $customer["phone"], $customer["mail"], $customer["address"], $customer["age"], $customer["money"], $customer["id_card"], $customer["id_branch"]);
+            $result = $model->Add($customer["name"], $customer["password"], $customer["citizen_identity_card"], $customer["phone"], $customer["mail"], $customer["address"], $customer["age"], $customer["money"], $customer["id_branch"]);
             if ($result) {
                 echo json_encode(array("query_err" => false, "err_detail" => "", "result" => "Success!"));
             } else {
