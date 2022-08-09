@@ -196,16 +196,8 @@ class CustomerModel extends DB
     {
         try {
             if (!$this->checkPhoneHasExit($phone)) {
-                $length = 25;
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                $randomString = '';
-                for ($i = 0; $i < $length; $i++) {
-                    $randomString .= $characters[rand(0, $charactersLength - 1)];
-                }
-                $token = $randomString;
                 $hashPass = base64_encode($password);
-                $sql = "INSERT INTO account(phone, password, token, updated_at) VALUE('$phone', '$hashPass','$token',null);";
+                $sql = "INSERT INTO account(phone, password, token, updated_at) VALUE('$phone', '$hashPass',null,null);";
                 return $this->executeUpdateAndInsert($sql);
             } else {
                 $this->jsonResponse(true, "Phone has exit!", "Failed!");
@@ -223,10 +215,39 @@ class CustomerModel extends DB
             $sql = "SELECT * FROM account WHERE phone = '$phone' and password = '$hashPass'";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
-                $sql_insert_token = "SELECT token FROM account WHERE phone = '$phone';";
-                $result_token = $this->executeSelect($sql_insert_token);
-                if (is_array($result_token) && count($result_token) > 0) {
-                    $this->jsonResponse(false, "", $result_token);
+                $length = 25;
+                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < $length; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+                $token = $randomString;
+                $sql_insert_token = "UPDATE account SET token = '$token' WHERE phone = '$phone' and password = '$hashPass';";
+                $result_token = $this->executeUpdateAndInsert($sql_insert_token);
+                if ($result_token) {
+                    $this->jsonResponse(false, "", "{token: '$token'}");
+                    die();
+                }
+                die();
+            };
+            return false;
+        } catch (Exception $ex) {
+            $this->trigger_response($ex);
+        }
+    }
+
+    public function SignOut($phone, $password)
+    {
+        try {
+            $hashPass = base64_encode($password);
+            $sql = "SELECT * FROM account WHERE phone = '$phone' and password = '$hashPass'";
+            $result = $this->executeSelect($sql);
+            if (is_array($result) && count($result) > 0) {
+                $sql_insert_token = "UPDATE account SET token = null WHERE phone = '$phone' and password = '$hashPass';";
+                $result_token = $this->executeUpdateAndInsert($sql_insert_token);
+                if ($result_token) {
+                    $this->jsonResponse(false, "", "{token: null}");
                     die();
                 }
                 die();

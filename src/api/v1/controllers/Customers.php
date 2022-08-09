@@ -155,6 +155,34 @@ class Customers extends Controller
         die();
     }
 
+    public function SignOut($authInfo): void
+    {
+        $phone = $authInfo["phone"] ?? "";
+        $password = $authInfo["password"] ?? "";
+        $isValid = true;
+        if (trim($phone) === "" || trim($password) === "") {
+            $isValid = false;
+            if (trim($phone) === "") {
+                $this->jsonResponse(true, "No Phone number found in body data!", "Failed!");
+            } else {
+                $this->jsonResponse(true, "No password found in body data!", "Failed!");
+            }
+        }
+        if ($isValid) {
+            $this->connectModel("CustomerModel");
+            $result = $this->model_->SignOut($phone, $password);
+            if ($result) {
+
+                $this->jsonResponse(false, "", "Success!");
+            } else {
+                $this->jsonResponse(true, "Number phone or password incorrect!", "Failed!");
+            }
+        } else {
+            $this->jsonResponse(true, "Data not valid!", "Failed!");
+        }
+        die();
+    }
+
     public function UpdateById($customer)
     {
         if (is_array($customer) && count($customer) > 0) {

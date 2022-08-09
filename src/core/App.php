@@ -71,6 +71,8 @@ class App
                 $password = $body->password ?? "";
                 if (isset($arr[3]) && $arr[3] == "signin") {
                     call_user_func_array([$this->controller, "SignIn"], [["phone" => $phone, "password" => $password]]);
+                }else if (isset($arr[3]) && $arr[3] == "signout") {
+                    call_user_func_array([$this->controller, "SignOut"], [["phone" => $phone, "password" => $password]]);
                 }
             } else if (isset($body->phone)) {
                 //check phone
