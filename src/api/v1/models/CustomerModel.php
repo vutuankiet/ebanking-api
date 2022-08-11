@@ -99,7 +99,7 @@ class CustomerModel extends DB
                     if ($result) {
                         $sql_select = "SELECT id_person FROM customer WHERE phone = '$phone';";
                         $customer_id = $this->executeSelect($sql_select)[0]["id_person"];
-                        $this->jsonResponse(false, "", "new customer id :  $customer_id");
+                        $this->jsonResponse(false, "Success", "new customer id :  $customer_id");
                     }
                 }
                 die();
@@ -241,7 +241,7 @@ class CustomerModel extends DB
                 $sql_insert_token = "UPDATE account SET token = '$token' WHERE phone = '$phone' and password = '$hashPass';";
                 $result_token = $this->executeUpdateAndInsert($sql_insert_token);
                 if ($result_token) {
-                    $this->jsonResponse(false, "", "{token: '$token'}");
+                    $this->jsonResponse(false, "Success", "{token: '$token'}");
                     die();
                 }
                 die();
@@ -262,7 +262,7 @@ class CustomerModel extends DB
                 $sql_insert_token = "UPDATE account SET token = null WHERE phone = '$phone' and password = '$hashPass';";
                 $result_token = $this->executeUpdateAndInsert($sql_insert_token);
                 if ($result_token) {
-                    $this->jsonResponse(false, "", "{token: null}");
+                    $this->jsonResponse(false, "Success", "{token: null}");
                     die();
                 }
                 die();
