@@ -20,7 +20,7 @@ class TransactionModel extends DB
     public function CheckCustomerIDHasExit($id_customer)
     {
         try {
-            $sql = "SELECT * FROM customer WHERE id_person = '$id_customer';";
+            $sql = "SELECT * FROM customer WHERE id_person = $id_customer AND state = 1;";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 return true;
@@ -38,7 +38,6 @@ class TransactionModel extends DB
             if ($this->CheckCustomerIDHasExit($from) && $this->getCategoryTransactionById($id)) {
                 $status = "Thành Công";
                 $sql = "INSERT INTO history_transaction(`money`, `from`, `id_category_transaction`, `status`, `updated_at`) VALUES($money, $from, $id, '$status', null);";
-                print_r($sql);
                 return $this->executeUpdateAndInsert($sql);
             }
             echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit!", "result" => []));
