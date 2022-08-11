@@ -40,7 +40,8 @@ INSERT INTO `account` (`phone`, `password`, `status`, `state`, `token`, `updated
 	('01721363123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, NULL, '2022-08-07 13:19:56', '2022-08-07 13:19:56'),
 	('01721363163', 'c29tZXBhc3M=', 'Đag hoạt động', 1, '', '2022-08-07 13:03:54', '2022-08-07 13:03:54'),
 	('01721433123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'MDE3MjE0MzMxMjNzb21lcGFzczIwMjI6MDg6MDc=', NULL, '2022-08-07 13:32:26'),
-	('01721433173', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'JNLhizZIlB25rwBi9lUrY8TPi', NULL, '2022-08-07 13:42:30');
+	('01721433173', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'JNLhizZIlB25rwBi9lUrY8TPi', NULL, '2022-08-07 13:42:30'),
+	('01721439173', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'sfzyBz9kppXL7kFyTe1qESPPH', NULL, '2022-08-09 16:15:21');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.branch
@@ -152,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   KEY `customer` (`phone`) USING BTREE,
   CONSTRAINT `customer_ibfk_4` FOREIGN KEY (`id_branch`) REFERENCES `branch` (`id_branch`),
   CONSTRAINT `customer_ibfk_5` FOREIGN KEY (`phone`) REFERENCES `account` (`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table ebanking.customer: ~6 rows (approximately)
 DELETE FROM `customer`;
@@ -163,7 +164,8 @@ INSERT INTO `customer` (`id_person`, `name`, `citizen_identity_card`, `mail`, `p
 	(8, 'Nguyen Van A', '031202403979', 'dangkha6h.dev130@gmail.com', '01721333123', 'HCM', 19, 20000, '2022-08-07 13:21:01', NULL, 1, 1),
 	(9, 'Nguyen Van A', '031102403979', 'dangkha6h.dev1310@gmail.com', '01721333113', 'HCM', 19, 20000, '2022-08-07 13:21:29', NULL, 1, 1),
 	(10, 'Nguyen Van A', '032142403979', 'dangkha6h.dev132140@gmail.com', '01721433123', 'HCM', 19, 20000, '2022-08-07 13:32:26', NULL, 1, 1),
-	(11, 'Nguyen Van A', '039142403979', 'dangkha6h.dev1321470@gmail.com', '01721433173', 'HCM', 19, 20000, '2022-08-07 13:42:30', NULL, 1, 1);
+	(11, 'Nguyen Van A', '039142403979', 'dangkha6h.dev1321470@gmail.com', '01721433173', 'HCM', 19, 20000, '2022-08-07 13:42:30', NULL, 1, 1),
+	(12, 'Nguyen Van A', '039992403979', 'dangkha6h.dep921470@gmail.com', '01721439173', 'HCM', 19, 20000, '2022-08-09 16:15:21', NULL, 1, 1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.history_transaction

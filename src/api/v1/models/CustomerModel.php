@@ -45,6 +45,21 @@ class CustomerModel extends DB
         }
     }
 
+    public function getCustomerByToken($token)
+    {
+        try {
+            $sql = "SELECT customer.id_person, customer.name, customer.citizen_identity_card, customer.mail, customer.phone, customer.address, customer.age, customer.money,customer.created_at,customer.updated_at,customer.id_branch,customer.state FROM customer INNER JOIN account ON customer.phone=account.phone WHERE account.token = '$token' AND customer.state=1;";
+            $result = $this->executeSelect($sql);
+            if (is_array($result) && count($result) > 0) {
+                return $result;
+            }
+            return null;
+        } catch (SQLiteException $ex) {
+            $this->trigger_response($ex);
+            die();
+        }
+    }
+
     public function getPhoneByCustomerId($id)
     {
         try {

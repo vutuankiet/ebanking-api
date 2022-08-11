@@ -53,11 +53,11 @@ class Customers extends Controller
         }
     }
 
-    public function Index($id = null)
+    public function Index($token = null)
     {
         $model = $this->model("CustomerModel");
 
-        if ($id === null) {
+        if ($token === null) {
             //        get all customer function
             $customers = $model->getAllCustomer();
             if ($customers !== null) {
@@ -65,9 +65,9 @@ class Customers extends Controller
             } else {
                 $this->jsonResponse(true, "no customer in server!", []);
             }
-        } else {
+        }else {
 //            get by id
-            $customers = $model->getCustomerById($id);
+            $customers = $model->getCustomerByToken($token);
             if ($customers !== null) {
                 $this->jsonResponse(false, "", $customers);
             } else {
