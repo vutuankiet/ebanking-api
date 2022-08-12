@@ -16,7 +16,7 @@ class Cards extends Controller
             }
         } else {
 //            get by id
-            $cards = $model->getCardById($id);
+            $cards = $model->getCardByCustomer($id);
             if ($cards !== null) {
                 $this->jsonResponse(false, "", $cards);
             } else {
@@ -26,15 +26,15 @@ class Cards extends Controller
         die();
     }
 
-    public function GetCardByCustomer($id_customer)
+    public function GetCardByCustomer($token)
     {
         $model = $this->model("CardModel");
-        $result = $model->getCardByCustomer($id_customer);
+        $result = $model->getCardByCustomer($token);
         if ($result !== null) {
-            echo json_encode(array("customer" => $id_customer, "query_err" => "false", "err_detail" => "", "results" => $result));
+            echo json_encode(array("token" => $token, "query_err" => "false", "err_detail" => "", "results" => $result));
 
         } else {
-            echo json_encode(array("customer" => $id_customer, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No customer found by keyword!"));
+            echo json_encode(array("token" => $token, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No customer found by keyword!"));
         }
         die();
 
@@ -81,14 +81,14 @@ class Cards extends Controller
             $isValid = false;
             echo json_encode(array("query_err" => true, "err_detail" => "No body found body has format {pin:''}", "result" => "Failed!"));
         }
-        if (trim($card["pin"]) === "" || trim($card["status"]) === "" || trim($card["id_customer"]) === "") {
+        if (trim($card["pin"]) === "" || trim($card["status"]) === "" || trim($card["token"]) === "") {
             $isValid = false;
 
             if (trim($card["pin"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No card pin found in body data!", "result" => "Failed!"));
             }
-            if (trim($card["id_customer"]) === "") {
-                echo json_encode(array("query_err" => true, "err_detail" => "No customer id found in body data!", "result" => "Failed!"));
+            if (trim($card["token"]) === "") {
+                echo json_encode(array("query_err" => true, "err_detail" => "No customer token found in body data!", "result" => "Failed!"));
             }
             if (trim($card["status"]) === "") {
                 echo json_encode(array("query_err" => true, "err_detail" => "No card status found in body data!", "result" => "Failed!"));
@@ -98,7 +98,7 @@ class Cards extends Controller
         if ($isValid) {
             $model = $this->model("CardModel");
 
-            $result = $model->Add($card["pin"], $card["status"], $card["id_customer"]);
+            $result = $model->Add($card["pin"], $card["status"], $card["token"]);
 
             if ($result["result"]) {
                 echo json_encode(array("query_err" => false, "err_detail" => "", "result" => ["success" => true, "id" => $result["id"]]));

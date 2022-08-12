@@ -1,6 +1,5 @@
 <?php
 
-
 class App
 {
 
@@ -13,6 +12,8 @@ class App
 
     function __construct()
     {
+        header("Content-Type: application/json");
+
         $config = parse_ini_file('./src/Config.init');
         $this->api_version = $config['version'];
         $arr = $this->UrlProcess();
@@ -21,7 +22,9 @@ class App
                 $this->GetProcess($arr);
                 break;
             case "POST":
+
                 $this->PostProcess($arr);
+
                 break;
             case "PUT":
                 $this->PutProcess($arr);
@@ -38,6 +41,7 @@ class App
     {
 
         $this->setController($arr);
+        header("Content-Type: application/json");
 
         $body = json_decode(file_get_contents("php://input"));
         $this->params = $arr ? array_values($arr) : [];
@@ -129,11 +133,11 @@ class App
                 call_user_func_array([$this->controller, "AddTransaction"], [array("money" => $money, "from" => $from, "id_category_transaction" => $this->params[0])]);
             }
         } else if (get_class($this->controller) === "Cards") {
-            if (isset($body->pin) && isset($body->status) && isset($body->id_customer)) {
+            if (isset($body->pin) && isset($body->status) && isset($body->token)) {
                 $pin = $body->pin ?? "";
                 $status = $body->status ?? "";
-                $id_customer = $body->id_customer ?? "";
-                call_user_func_array([$this->controller, "AddCard"], [["id_customer" => $id_customer, "pin" => $pin, "status" => $status]]);
+                $token = $body->token ?? "";
+                call_user_func_array([$this->controller, "AddCard"], [["token" => $token, "pin" => $pin, "status" => $status]]);
             } else if (isset($body->pin)) {
                 call_user_func_array([$this->controller, "GetCardByCustomer"], [$body->id_customer]);
             }

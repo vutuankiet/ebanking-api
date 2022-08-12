@@ -48,7 +48,22 @@ class CardModel extends DB
         }
     }
 
-    public function Add($pin_code, $status, $id_customer)
+    public function getCustomerByToken($token)
+    {
+        try {
+            $sql = "SELECT customer.id_person, customer.name, customer.citizen_identity_card, customer.mail, customer.phone, customer.address, customer.age, customer.money,customer.created_at,customer.updated_at,customer.id_branch,customer.state FROM customer INNER JOIN account ON customer.phone=account.phone WHERE account.token = '$token' AND customer.state=1;";
+            $result = $this->executeSelect($sql);
+            if (is_array($result) && count($result) > 0) {
+                return $result;
+            }
+            return null;
+        } catch (SQLiteException $ex) {
+            $this->trigger_response($ex);
+            die();
+        }
+    }
+
+    public function Add($pin_code, $status, $token)
     {
         try {
             $length = 10;
@@ -60,6 +75,10 @@ class CardModel extends DB
             }
             $id = $randomString;
             $status = "Đã kích hoạt";
+            $sql_customer = "SELECT customer.id_person as id_customers from customer JOIN account ON customer.phone = account.phone WHERE customer.state = 1 AND account.token = '$token'";
+            $result1 = $this->executeSelect($sql_customer);
+            $result2 = $result1[0];
+            $id_customer = $result2['id_customers'];
             $sql = "INSERT INTO card(id_card,pin,status,state,id_customer,updated_at) VALUE('$id','$pin_code','$status',1,'$id_customer',null)";
             $result = $this->executeUpdateAndInsert($sql);
             if ($result) {
@@ -107,10 +126,10 @@ class CardModel extends DB
         }
     }
 
-    public function getCardByCustomer($id_customer)
+    public function getCardByCustomer($token)
     {
         try {
-            $sql = "SELECT card.id_card,card.pin,card.status,card.state from card JOIN customer ON card.id_customer = customer.id_person WHERE customer.state = 1 AND card.id_customer = $id_customer;";
+            $sql = "SELECT card.id_card,card.pin,card.status,card.state from customer JOIN card ON customer.id_person = card.id_customer JOIN account ON customer.phone = account.phone WHERE customer.state = 1 AND account.token = '$token';";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 return $result;
