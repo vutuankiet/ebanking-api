@@ -2,11 +2,11 @@
 
 class Cards extends Controller
 {
-    public function Index($id = null)
+    public function Index($token = null)
     {
         $model = $this->model("CardModel");
 
-        if ($id === null) {
+        if ($token === null) {
             //        get all card function
             $cards = $model->getAllCard();
             if ($cards !== null) {
@@ -16,7 +16,7 @@ class Cards extends Controller
             }
         } else {
 //            get by id
-            $cards = $model->getCardByCustomer($id);
+            $cards = $model->getCardByCustomer($token);
             if ($cards !== null) {
                 $this->jsonResponse(false, "", $cards);
             } else {
