@@ -93,9 +93,9 @@ class Customers extends Controller
         $model = $this->model("CustomerModel");
         $result = $model->getCustomerByToken($token);
         if ($result !== null) {
-            echo json_encode(array("branch" => $token, "query_err" => "false", "err_detail" => "", "results" => $result));
+            echo json_encode(array("Token" => $token, "query_err" => "false", "err_detail" => "", "results" => $result));
         } else {
-            echo json_encode(array("branch" => $token, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No branch found by keyword!"));
+            echo json_encode(array("Token" => $token, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No branch found by keyword!"));
         }
     }
 

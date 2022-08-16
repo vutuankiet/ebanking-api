@@ -31,10 +31,10 @@ class Passbooks extends Controller
         $model = $this->model("PassbookModel");
         $result = $model->getPassbookByCustomer($token);
         if ($result !== null) {
-            echo json_encode(array("Customer" => $token, "query_err" => "false", "err_detail" => "", "results" => $result));
+            echo json_encode(array("Token" => $token, "query_err" => "false", "err_detail" => "", "results" => $result));
 
         } else {
-            echo json_encode(array("Customer" => $token, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No passbook found by token : $token!"));
+            echo json_encode(array("Token" => $token, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No passbook found by token : $token!"));
         }
         die();
 
