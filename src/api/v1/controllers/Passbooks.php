@@ -26,15 +26,15 @@ class Passbooks extends Controller
         die();
     }
 
-    public function GetPassbookByCustomer($id_customer)
+    public function GetPassbookByCustomer($token)
     {
         $model = $this->model("PassbookModel");
-        $result = $model->getPassbookByCustomer($id_customer);
+        $result = $model->getPassbookByCustomer($token);
         if ($result !== null) {
-            echo json_encode(array("Customer" => $id_customer, "query_err" => "false", "err_detail" => "", "results" => $result));
+            echo json_encode(array("Customer" => $token, "query_err" => "false", "err_detail" => "", "results" => $result));
 
         } else {
-            echo json_encode(array("Customer" => $id_customer, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No passbook found by id : $id_customer!"));
+            echo json_encode(array("Customer" => $token, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No passbook found by token : $token!"));
         }
         die();
 

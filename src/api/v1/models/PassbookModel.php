@@ -129,10 +129,13 @@ class PassbookModel extends DB
         }
     }
 
-    public function getPassbookByCustomer($id_customer)
+    public function getPassbookByCustomer($token)
     {
         try {
-            $sql = "SELECT * FROM passbook WHERE id_customer LIKE '" . "%" . $id_customer . "%' AND state = 1;";
+//            $sql = "SELECT * FROM passbook WHERE id_customer LIKE '" . "%" . $id_customer . "%' AND state = 1;";
+            $sql = "SELECT passbook.id_passbook, passbook.id_customer, passbook.money, passbook.id_category_passbook,passbook.created_at,passbook.updated_at,passbook.state FROM passbook  JOIN `customer` ON passbook.id_customer= customer.id_person
+  JOIN `account` ON customer.phone=`account`.phone
+   WHERE token LIKE '" . "%" . $token . "%' AND passbook.state = 1;";
             $result = $this->executeSelect($sql);
             if (is_array($result) && count($result) > 0) {
                 return $result;

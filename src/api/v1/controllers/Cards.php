@@ -101,7 +101,7 @@ class Cards extends Controller
             $result = $model->Add($card["pin"], $card["status"], $card["token"]);
 
             if ($result["result"]) {
-                echo json_encode(array("query_err" => false, "err_detail" => "", "result" => ["success" => true, "id" => $result["id"]]));
+                echo json_encode(array("query_err" => false, "err_detail" => "", "result" => ["success" => true]));
             } else {
                 echo json_encode(array("query_err" => true, "err_detail" => "some err when add document in server!", "result" => "failed!"));
             }

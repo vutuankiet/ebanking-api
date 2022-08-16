@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   PRIMARY KEY (`phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.account: ~8 rows (approximately)
+-- Dumping data for table ebanking.account: ~6 rows (approximately)
 DELETE FROM `account`;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 INSERT INTO `account` (`phone`, `password`, `status`, `state`, `token`, `updated_at`, `created_at`) VALUES
@@ -39,7 +39,7 @@ INSERT INTO `account` (`phone`, `password`, `status`, `state`, `token`, `updated
 	('01721333123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'i5Hsj7y4xPSFVsL5bju03jjsg', NULL, '2022-08-07 13:21:01'),
 	('01721363123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, NULL, '2022-08-07 13:19:56', '2022-08-07 13:19:56'),
 	('01721363163', 'c29tZXBhc3M=', 'Đag hoạt động', 1, '', '2022-08-07 13:03:54', '2022-08-07 13:03:54'),
-	('01721433123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'MDE3MjE0MzMxMjNzb21lcGFzczIwMjI6MDg6MDc=', NULL, '2022-08-07 13:32:26'),
+	('01721433123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'MDE3MjE0MzMxMjNzb21lcGFzcdIwMjI6MDg6MDc=', NULL, '2022-08-07 13:32:26'),
 	('01721433173', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'JNLhizZIlB25rwBi9lUrY8TPi', NULL, '2022-08-07 13:42:30'),
 	('01721439173', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'TezcGIhAEsjd8PLxUv8gi4U84', '2022-08-14 21:55:57', '2022-08-09 16:15:21'),
 	('01721439175', 'c29tZXBhc3M=', 'Đag hoạt động', 1, NULL, NULL, '2022-08-11 14:43:16');
@@ -69,7 +69,7 @@ INSERT INTO `branch` (`id_branch`, `name_branch`, `location_branch`, `state`, `c
 -- Dumping structure for table ebanking.card
 DROP TABLE IF EXISTS `card`;
 CREATE TABLE IF NOT EXISTS `card` (
-  `id_card` varchar(20) NOT NULL,
+  `id_card` int(11) NOT NULL AUTO_INCREMENT,
   `pin` varchar(6) NOT NULL,
   `status` varchar(20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -80,15 +80,14 @@ CREATE TABLE IF NOT EXISTS `card` (
   PRIMARY KEY (`id_card`),
   KEY `card` (`id_customer`),
   CONSTRAINT `card_ibfk_1` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id_person`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.card: ~3 rows (approximately)
+-- Dumping data for table ebanking.card: ~0 rows (approximately)
 DELETE FROM `card`;
 /*!40000 ALTER TABLE `card` DISABLE KEYS */;
 INSERT INTO `card` (`id_card`, `pin`, `status`, `created_at`, `updated_at`, `expired_at`, `state`, `id_customer`) VALUES
-	('GtKDi1CR6Q', '123349', 'Dang hoat dong', '2022-08-14 22:06:10', '2022-08-16 21:02:25', '2022-08-14 22:06:10', 1, 6),
-	('HGB8aSzw44', '123349', 'Dang hoat dong', '2022-08-14 22:03:20', '2022-08-14 22:06:06', '2022-08-14 22:03:20', 0, 12),
-	('iWDUQvwyJM', '123356', 'Dang hoat dong', '2022-08-16 19:58:12', '2022-08-16 21:18:22', '2022-08-16 19:58:12', 1, 9);
+	(1, '123356', 'Dang hoat dong', '2022-08-16 21:48:56', '2022-08-16 21:54:26', '2022-08-16 21:48:56', 1, 9),
+	(2, '123357', 'Đã kích hoạt', '2022-08-16 21:49:52', NULL, '2022-08-16 21:49:52', 1, 12);
 /*!40000 ALTER TABLE `card` ENABLE KEYS */;
 
 -- Dumping structure for table ebanking.category_passbook
@@ -103,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `category_passbook` (
   PRIMARY KEY (`id_category_passbook`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table ebanking.category_passbook: ~1 rows (approximately)
+-- Dumping data for table ebanking.category_passbook: ~0 rows (approximately)
 DELETE FROM `category_passbook`;
 /*!40000 ALTER TABLE `category_passbook` DISABLE KEYS */;
 INSERT INTO `category_passbook` (`id_category_passbook`, `name_passbook`, `period`, `interest_rate`, `description`, `state`) VALUES
@@ -157,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   CONSTRAINT `customer_ibfk_5` FOREIGN KEY (`phone`) REFERENCES `account` (`phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.customer: ~8 rows (approximately)
+-- Dumping data for table ebanking.customer: ~6 rows (approximately)
 DELETE FROM `customer`;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
 INSERT INTO `customer` (`id_person`, `name`, `citizen_identity_card`, `mail`, `phone`, `address`, `age`, `money`, `created_at`, `updated_at`, `id_branch`, `state`) VALUES
@@ -215,11 +214,13 @@ CREATE TABLE IF NOT EXISTS `passbook` (
   KEY `id_ca` (`id_category_passbook`),
   CONSTRAINT `passbook_ibfk_1` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id_person`),
   CONSTRAINT `passbook_ibfk_2` FOREIGN KEY (`id_category_passbook`) REFERENCES `category_passbook` (`id_category_passbook`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table ebanking.passbook: ~0 rows (approximately)
 DELETE FROM `passbook`;
 /*!40000 ALTER TABLE `passbook` DISABLE KEYS */;
+INSERT INTO `passbook` (`id_passbook`, `id_customer`, `money`, `id_category_passbook`, `created_at`, `updated_at`, `state`) VALUES
+	(1, 9, 1, 3, '2022-08-16 22:00:45', NULL, 1);
 /*!40000 ALTER TABLE `passbook` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
