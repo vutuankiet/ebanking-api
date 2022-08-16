@@ -62,7 +62,7 @@ class Cards extends Controller
             $pin = $card["pin"] ?? "";
             $status = $card["status"] ?? "";
             $id = $card["id_card"] ?? "";
-            $result = $this->model_->Update($id, $pin, $status);
+            $result = $this->model_->Update($id, $pin, $status, $card["token"]);
             if ($result) {
                 $this->jsonResponse(false, "", "Success!");
             } else {

@@ -161,10 +161,11 @@ class App
                     call_user_func_array([$this->controller, "UpdateById"], [array("name" => $name, "location" => $location, "id" => $this->params[0])]);
                 }
             } else if (get_class($this->controller) === "Cards") {
-                if (isset($body->pin) || isset($body->status)) {
+                if (isset($body->pin) || isset($body->status) || isset($body->token)) {
                     $pin = $body->pin ?? "";
                     $status = $body->status ?? "";
-                    call_user_func_array([$this->controller, "UpdateById"], [array("pin" => $pin, "status" => $status, "id_card" => $this->params[0])]);
+                    $token = $body->token ?? "";
+                    call_user_func_array([$this->controller, "UpdateById"], [array("pin" => $pin, "status" => $status, "token" => $token, "id_card" => $this->params[0])]);
                 }
             } else if (get_class($this->controller) === "Passbooks") {
 

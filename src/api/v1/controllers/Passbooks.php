@@ -34,7 +34,7 @@ class Passbooks extends Controller
             echo json_encode(array("Customer" => $id_customer, "query_err" => "false", "err_detail" => "", "results" => $result));
 
         } else {
-            echo json_encode(array("Customer" => $id_customer, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No location found by keyword!"));
+            echo json_encode(array("Customer" => $id_customer, "query_err" => "false", "err_detail" => "", "results" => [], "message" => "No passbook found by id : $id_customer!"));
         }
         die();
 

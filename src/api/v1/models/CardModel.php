@@ -112,15 +112,35 @@ class CardModel extends DB
     }
 
 
-    public function Update($id, $pin_code, $status)
+    public function Update($id, $pin_code, $status, $token)
     {
         try {
             $checkExit = $this->getCardById($id);
             if ($checkExit !== null) {
-                $checkPin = $pin_code === "" ? "pin" : "'$pin_code'";
-                $checkStatus = $status === "" ? "status" : "'$status'";
-                $sql = "UPDATE card SET pin = $checkPin, status = $checkStatus, updated_at = CURRENT_TIMESTAMP() WHERE id_card = '$id'";
-                return $this->executeUpdateAndInsert($sql);
+                $sql_customer = "SELECT customer.id_person as id_customers from customer JOIN account ON customer.phone = account.phone WHERE customer.state = 1 AND account.token = '$token'";
+                $result = $this->executeSelect($sql_customer);
+                if (is_array($result) && count($result) > 0) {
+                    $result1 = $this->executeSelect($sql_customer);
+                    $result2 = $result1[0];
+                    $id_customer = $result2['id_customers'];
+
+                    $sql_card = "SELECT card.id_customer AS card_id_customer FROM card WHERE id_card = '$id' AND id_customer = '$id_customer';";
+                    $result3 = $this->executeSelect($sql_card);
+                    $result4 = $result3[0];
+                    $card_id_customer = $result4['card_id_customer'];
+                    if($id_customer === $card_id_customer){
+                        $checkPin = $pin_code === "" ? "pin" : "'$pin_code'";
+                        $checkStatus = $status === "" ? "status" : "'$status'";
+                        $sql = "UPDATE card SET pin = $checkPin, status = $checkStatus, updated_at = CURRENT_TIMESTAMP() WHERE id_card = '$id'";
+                        return $this->executeUpdateAndInsert($sql);
+                    }else{
+                        $this->jsonResponse(true, "Incorrect token : '$token'", "Failed!");
+                        die();
+                    }
+                }else{
+                    $this->jsonResponse(true, "Incorrect token : '$token'", "Failed!");
+                    die();
+                }
             } else {
                 $this->jsonResponse(true, "Card not found by id : '$id'", "Failed!");
                 die();
