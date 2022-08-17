@@ -18,15 +18,16 @@ class CustomerModel extends DB
         }
     }
 
-    public function changePassword($password, $id)
+    public function changePassword($password, $token)
     {
-        $result = $this->getCustomerById($id);
+        $result = $this->getCustomerByToken($token);
         if ($result !== null) {
+            $hashPass = base64_encode($password);
             $phone = $result[0]["phone"];
-            $sql = "UPDATE account SET password = $password WHERE phone = $phone;";
+            $sql = "UPDATE account SET password = '$hashPass' WHERE phone = $phone;";
             return $this->executeUpdateAndInsert($sql);
         }
-        $this->jsonResponse(true, "no user found by id : $id", "Failed!");
+        $this->jsonResponse(true, "no user found by token : $token", "Failed!");
         die();
     }
 
@@ -273,17 +274,17 @@ class CustomerModel extends DB
         }
     }
 
-    public function checkPassword($password, $id)
+    public function checkPassword($password, $token)
     {
         $hashPass = base64_encode($password);
-        $customer = $this->getCustomerById($id);
+        $customer = $this->getCustomerByToken($token);
         if ($customer !== null) {
             $phone = $customer[0]["phone"];
-            $sql = "SELECT * FROM account WHERE phone = $phone AND password = $hashPass";
+            $sql = "SELECT * FROM account WHERE phone = '$phone' AND password = '$hashPass'";
             $select_result = $this->executeSelect($sql);
             return (is_array($select_result) && count($select_result) > 0);
         }
-        $this->jsonResponse(true, "No customer found by id :  $id", "Failed!");
+        $this->jsonResponse(true, "No customer found by token :  $token", "Failed!");
         die();
     }
 

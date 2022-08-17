@@ -206,7 +206,7 @@ class App
 
                     $newPass = $body->newPassword ?? "";
                     $oldPass = $body->oldPassword ?? "";
-                    call_user_func_array([$this->controller, "changePassword"], [$oldPass, $newPass, $this->params[0]]);
+                    call_user_func_array([$this->controller, "changePassword"], [$oldPass, $newPass, $this->params[1]]);
                 } else if (isset($body->name) || isset($body->citizen_identity_card) || isset($body->phone) || isset($body->mail) || isset($body->address) || isset($body->age) || isset($body->money) || isset($body->id_card) || isset($body->id_branch)) {
                     $name = $body->name ?? "";
                     $id_branch = $body->id_branch ?? "";

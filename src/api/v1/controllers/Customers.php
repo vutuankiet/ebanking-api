@@ -284,7 +284,7 @@ class Customers extends Controller
 
     }
 
-    public function changePassword($oldPassword, $newPassword, $id)
+    public function changePassword($oldPassword, $newPassword, $token)
     {
         $isValid = true;
         if (trim($oldPassword) === "" || trim($newPassword) === "") {
@@ -304,8 +304,8 @@ class Customers extends Controller
         }
         if ($isValid) {
             $this->connectModel("CustomerModel");
-            if ($this->model_->checkPassword($oldPassword, $id)) {
-                if ($this->model_->changePassword($newPassword, $id)) {
+            if ($this->model_->checkPassword($oldPassword, $token)) {
+                if ($this->model_->changePassword($newPassword, $token)) {
                     $this->jsonResponse(false, "", "Success!");
                     die();
                 }
