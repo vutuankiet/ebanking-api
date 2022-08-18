@@ -90,13 +90,13 @@ class App
             }
 
         } else if (get_class($this->controller) === "Passbooks") {
-            if (isset($body->id_customer) && isset($body->token) && isset($body->money) && isset($body->id_category_passbook)) {
+            if (isset($body->id_customer) && isset($body->money) && isset($body->id_category_passbook)) {
                 $id_customer = $body->id_customer ?? "";
                 $money = $body->money ?? "";
                 $id_category_passbook = $body->id_category_passbook ?? "";
                 call_user_func_array([$this->controller, "AddPassbook"], [["id_customer" => $id_customer, "money" => $money, "id_category_passbook" => $id_category_passbook]]);
                 //            create passbook
-            } else if (isset($body->id_customer)) {
+            } else if (isset($body->token)) {
                 call_user_func_array([$this->controller, "GetPassbookByCustomer"], [$body->token]);
             }
         } else if (get_class($this->controller) === "CategoryPassbooks") {

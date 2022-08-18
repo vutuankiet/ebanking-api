@@ -82,8 +82,19 @@ class PassbookModel extends DB
     {
         try {
             if ($this->CheckCustomerIDHasExit($id_customer) && $this->CheckCategoryPassbookIDHasExit($id_category_passbook)) {
-                $sql = "INSERT INTO passbook(id_customer, money, id_category_passbook, updated_at) VALUE($id_customer, $money, $id_category_passbook, null);";
-                return $this->executeUpdateAndInsert($sql);
+                $sql_money = "SELECT money FROM customer WHERE id_person = '$id_customer';";
+                $balance = $this->executeSelect($sql_money);
+                $money_customer = $balance[0]["money"] ?? 0;
+                if($money_customer >= $money){
+                    $money_last_customer = $money_customer - $money;
+                    $sql = "INSERT INTO passbook(id_customer, money, id_category_passbook, updated_at) VALUE($id_customer, $money, $id_category_passbook, null);";
+                    $sql_customer = "UPDATE `customer` SET `money` = $money_last_customer, `updated_at` = CURRENT_TIMESTAMP() WHERE `id_person` = $id_customer;";
+                    return $this->executeUpdateAndInsert($sql)&&$this->executeUpdateAndInsert($sql_customer);
+                }else{
+                    echo json_encode(array("query_err" => true, "err_detail" => "Account not enough money!", "result" => []));
+                    die();
+                }
+
             }
             echo json_encode(array("query_err" => true, "err_detail" => "Customer does not exit or category passbook!", "result" => []));
             die();
