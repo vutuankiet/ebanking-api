@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `account` (
 DELETE FROM `account`;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 INSERT INTO `account` (`phone`, `password`, `status`, `state`, `token`, `updated_at`, `created_at`) VALUES
-	('01721333113', 'bmV3UGFzc3dvcmQ=', 'Đag hoạt động', 1, 'MDE3MjEzMzMxMTNzb21lcGFzczIwMjI6MDg6MDc=', NULL, '2022-08-07 13:21:29'),
+	('01721333113', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'MDE3MjEzMzMxMTNzb21lcGFzczIwMjI6MDg6MDc=', NULL, '2022-08-07 13:21:29'),
 	('01721333123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, 'i5Hsj7y4xPSFVsL5bju03jjsg', NULL, '2022-08-07 13:21:01'),
 	('01721363123', 'c29tZXBhc3M=', 'Đag hoạt động', 1, NULL, '2022-08-07 13:19:56', '2022-08-07 13:19:56'),
 	('01721363163', 'c29tZXBhc3M=', 'Đag hoạt động', 1, '', '2022-08-07 13:03:54', '2022-08-07 13:03:54'),
@@ -163,7 +163,7 @@ INSERT INTO `customer` (`id_person`, `name`, `citizen_identity_card`, `mail`, `p
 	(6, 'Nguyen Van A', '031202406979', 'dan1gkha6h.dev10@gmail.com', '01721363163', 'HCM', 19, 20000, '2022-08-07 13:03:54', NULL, 1, 1),
 	(7, 'Nguyen Van A', '031202402979', 'dangkha6h.dev10@gmail.com', '01721363123', 'HCM', 19, 20000, '2022-08-07 13:19:56', NULL, 1, 1),
 	(8, 'Nguyen Van A', '031202403979', 'dangkha6h.dev130@gmail.com', '01721333123', 'HCM', 19, 20000, '2022-08-07 13:21:01', NULL, 1, 1),
-	(9, 'Nguyen Van A', '031102403979', 'dangkha6h.dev1310@gmail.com', '01721333113', 'HCM', 19, 20000, '2022-08-07 13:21:29', NULL, 1, 1),
+	(9, 'Nguyen Van A', '031102403979', 'dangkha6h.dev1310@gmail.com', '01721333113', 'HCM', 19, 19900, '2022-08-07 13:21:29', '2022-08-18 19:55:16', 1, 1),
 	(10, 'Nguyen Van A', '032142403979', 'dangkha6h.dev132140@gmail.com', '01721433123', 'HCM', 19, 20000, '2022-08-07 13:32:26', NULL, 1, 1),
 	(11, 'Nguyen Van A', '039142403979', 'dangkha6h.dev1321470@gmail.com', '01721433173', 'HCM', 19, 20000, '2022-08-07 13:42:30', NULL, 1, 1),
 	(12, 'Nguyen Van A', '039992403979', 'dangkha6h.dep921470@gmail.com', '01721439173', 'HCM', 19, 20000, '2022-08-09 16:15:21', NULL, 1, 1),
@@ -214,13 +214,20 @@ CREATE TABLE IF NOT EXISTS `passbook` (
   KEY `id_ca` (`id_category_passbook`),
   CONSTRAINT `passbook_ibfk_1` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id_person`),
   CONSTRAINT `passbook_ibfk_2` FOREIGN KEY (`id_category_passbook`) REFERENCES `category_passbook` (`id_category_passbook`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ebanking.passbook: ~1 rows (approximately)
+-- Dumping data for table ebanking.passbook: ~8 rows (approximately)
 DELETE FROM `passbook`;
 /*!40000 ALTER TABLE `passbook` DISABLE KEYS */;
 INSERT INTO `passbook` (`id_passbook`, `id_customer`, `money`, `id_category_passbook`, `created_at`, `updated_at`, `state`) VALUES
-	(1, 9, 1, 3, '2022-08-16 22:00:45', NULL, 1);
+	(1, 9, 1, 3, '2022-08-16 22:00:45', NULL, 1),
+	(2, 9, 1, 3, '2022-08-18 19:42:30', NULL, 1),
+	(3, 9, 1, 3, '2022-08-18 19:43:51', NULL, 1),
+	(4, 9, 100, 3, '2022-08-18 19:51:00', NULL, 1),
+	(5, 9, 100, 3, '2022-08-18 19:51:23', NULL, 1),
+	(6, 9, 100, 3, '2022-08-18 19:51:41', NULL, 1),
+	(7, 9, 100, 3, '2022-08-18 19:52:02', NULL, 1),
+	(8, 9, 100, 3, '2022-08-18 19:55:16', NULL, 1);
 /*!40000 ALTER TABLE `passbook` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
